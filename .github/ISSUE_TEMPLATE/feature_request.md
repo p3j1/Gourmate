@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: 기능 추가 이슈
-title: ''
+title: 'feat: '
 labels: enhancement
 assignees: ''
 
