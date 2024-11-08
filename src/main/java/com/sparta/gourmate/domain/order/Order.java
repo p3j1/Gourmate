@@ -16,14 +16,8 @@ import java.util.UUID;
 public class Order  {  // BaseEntity 상속
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID orderId;  // 주문 ID, PK
-
-    @Column(nullable = false)
-    private Long userId;   // 사용자 ID, FK
-
-    @Column(nullable = false)
-    private UUID storeId;  // 가게 ID, FK
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;  // 주문 ID, PK
 
     @Column(nullable = false, length = 255)
     private String address;  // 배송지
@@ -39,12 +33,4 @@ public class Order  {  // BaseEntity 상속
 
     @Column(nullable = false)
     private int totalPrice;  // 총 가격
-
-    @Column(nullable = false)
-    private boolean isDeleted;  // 삭제 여부
-
-    @PrePersist
-    public void prePersist() {
-        this.isDeleted = false;  // 기본값 false
-    }
 }

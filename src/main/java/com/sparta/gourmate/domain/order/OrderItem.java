@@ -17,8 +17,8 @@ import java.util.UUID;
 public class OrderItem {  // BaseEntity 상속 (타임스탬프와 생성/수정자 필드 처리)
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID orderItemId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
@@ -37,12 +37,8 @@ public class OrderItem {  // BaseEntity 상속 (타임스탬프와 생성/수정
     @Column(nullable = false)
     private int totalPrice;  // 총 가격
 
-    @Column(nullable = false)
-    private boolean isDeleted;  // 삭제 여부
-
     @PrePersist
     public void prePersist() {
-        this.isDeleted = false;
         this.totalPrice = this.unitPrice * this.quantity;  // 총 가격 계산
     }
 }

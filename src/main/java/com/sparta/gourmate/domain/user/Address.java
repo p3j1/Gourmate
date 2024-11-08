@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,8 +16,8 @@ import lombok.Setter;
 public class Address  {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long addressId;  // 주소 ID, PK
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;  // 주소 ID, PK
 
     //@ManyToOne(fetch = FetchType.LAZY)
     //@JoinColumn(name = "user_id", nullable = false)
@@ -27,8 +29,6 @@ public class Address  {
     @Column
     private String addressRequest;  // 요청 사항 (예: 배송 시 특정 요청)
 
-    @Column(nullable = false)
-    private boolean isDeleted = false;  // 삭제 여부 (기본값: false)
 
 //    // 생성자
 //    //public Address(User user, String address, String addressRequest) {
