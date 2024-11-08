@@ -1,11 +1,19 @@
 package com.sparta.gourmate.domain.order;
 
+
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.UUID;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "p_orders")
-public class Order extends BaseEntity {  // BaseEntity 상속
+public class Order  {  // BaseEntity 상속
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,80 +43,8 @@ public class Order extends BaseEntity {  // BaseEntity 상속
     @Column(nullable = false)
     private boolean isDeleted;  // 삭제 여부
 
+    @PrePersist
     public void prePersist() {
         this.isDeleted = false;  // 기본값 false
-    }
-
-    // Getter, Setter
-    public UUID getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(UUID orderId) {
-        this.orderId = orderId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public UUID getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(UUID storeId) {
-        this.storeId = storeId;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getOrderRequest() {
-        return orderRequest;
-    }
-
-    public void setOrderRequest(String orderRequest) {
-        this.orderRequest = orderRequest;
-    }
-
-    public String getOrderType() {
-        return orderType;
-    }
-
-    public void setOrderType(String orderType) {
-        this.orderType = orderType;
-    }
-
-    public String getOrderStatus() {
-        return orderStatus;
-    }
-
-    public void setOrderStatus(String orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-    public int getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 }

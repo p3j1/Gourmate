@@ -2,72 +2,44 @@ package com.sparta.gourmate.domain.user;
 
 import com.sparta.gourmate.domain.order.BaseEntity;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "p_addresses")
-public class Address extends BaseEntity {  // BaseEntity 상속 (타임스탬프와 생성/수정자 필드 처리)
+public class Address  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID addressId;  // 주소 ID, PK
+    private Long addressId;  // 주소 ID, PK
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)  // 사용자 ID (FK)
-    private User user;  // 사용자 엔티티와 관계 설정
+    //@ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "user_id", nullable = false)
+    //private User user;  // 사용자 정보, FK
 
     @Column(nullable = false)
-    private String address;  // 주소
+    private String address;  // 실제 주소
 
     @Column
-    private String addressRequest;  // 요청 사항
+    private String addressRequest;  // 요청 사항 (예: 배송 시 특정 요청)
 
     @Column(nullable = false)
-    private boolean isDeleted;  // 삭제 여부
+    private boolean isDeleted = false;  // 삭제 여부 (기본값: false)
 
-    public void prePersist() {
-        this.isDeleted = false;  // 기본값 false
-    }
+//    // 생성자
+//    //public Address(User user, String address, String addressRequest) {
+//        this.user = user;
+//        this.address = address;
+//        this.addressRequest = addressRequest;
+//    }
 
-    // Getter, Setter
-    public UUID getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(UUID addressId) {
-        this.addressId = addressId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
+    // 주소 정보 수정
+    public void updateAddress(String address, String addressRequest) {
         this.address = address;
-    }
-
-    public String getAddressRequest() {
-        return addressRequest;
-    }
-
-    public void setAddressRequest(String addressRequest) {
         this.addressRequest = addressRequest;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 }
