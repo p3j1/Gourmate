@@ -1,12 +1,12 @@
 package com.sparta.gourmate.global.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 import static org.springframework.http.HttpStatus.*;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 public enum ErrorCode {
 
@@ -22,7 +22,6 @@ public enum ErrorCode {
     AUTH_JWT_UNSUPPORTED("지원되지 않는 토큰입니다.", UNAUTHORIZED),
     AUTH_MEMBER_NOT_EXISTS("존재하지 않는 사용자입니다.", BAD_REQUEST),
     AUTH_PASSWORD_BLANK("비밀번호는 공백일 수 없습니다.", BAD_REQUEST),
-
     ;
 
     private final String message;

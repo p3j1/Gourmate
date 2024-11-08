@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import static org.springframework.boot.web.servlet.server.Encoding.DEFAULT_CHARSET;
 import static org.springframework.http.HttpHeaders.CONTENT_ENCODING;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Slf4j
@@ -107,4 +108,3 @@ public class GlobalExceptionHandler {
     }
 
 }
-
