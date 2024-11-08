@@ -1,5 +1,6 @@
 package com.sparta.gourmate.domain.menu.entity;
 
+import com.sparta.gourmate.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,10 @@ public class Menu {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private MenuStatusEnum status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
 
     public Menu(UUID id, String name, String description, Integer price, MenuStatusEnum status) {
         this.id = id;

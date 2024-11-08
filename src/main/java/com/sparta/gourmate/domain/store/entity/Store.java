@@ -1,11 +1,14 @@
 package com.sparta.gourmate.domain.store.entity;
 
+import com.sparta.gourmate.domain.menu.entity.Menu;
 import com.sparta.gourmate.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -35,6 +38,9 @@ public class Store {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "store")
+    private List<Menu> menuList = new ArrayList<>();
 
     public Store(String name, String location, int averageRating, Category category, User user) {
         this.name = name;
