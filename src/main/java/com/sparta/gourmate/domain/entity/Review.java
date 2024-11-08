@@ -14,13 +14,13 @@ public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Long reviewId;
+    private Long id;
 
     @Column(nullable = false)
     private int rating;
 
     @Column
-    private String reviewContent;
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -34,9 +34,9 @@ public class Review {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    public Review(int rating, String reviewContent, User user, Order order, Store store) {
+    public Review(int rating, String content, User user, Order order, Store store) {
         this.rating = rating;
-        this.reviewContent = reviewContent;
+        this.content = content;
         this.user = user;
         this.order = order;
         this.store = store;

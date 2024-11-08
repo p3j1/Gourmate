@@ -15,10 +15,10 @@ public class Store {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Long storeId;
+    private Long id;
 
     @Column(nullable = false)
-    private String storeName;
+    private String name;
 
     @Column(nullable = false)
     private String location;
@@ -34,8 +34,8 @@ public class Store {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Store(String storeName, String location, int averageRating, Category category, User user) {
-        this.storeName = storeName;
+    public Store(String name, String location, int averageRating, Category category, User user) {
+        this.name = name;
         this.location = location;
         this.averageRating = averageRating;
         this.category = category;
