@@ -14,13 +14,12 @@ public class Category{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Long category_id;
+    private Long categoryId;
 
     @Column(nullable = false)
-    private String category_name;
+    private String categoryName;
 
-    public Category(String category_name) {
-        this.category_name = category_name;
+    public Category(String categoryName) {
+        this.categoryName = categoryName;
     }
-
 }
