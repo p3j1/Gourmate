@@ -1,12 +1,10 @@
-package com.sparta.gourmate.domain.order;
-
+package com.sparta.gourmate.domain.order.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.awt.*;
 import java.util.UUID;
 
 @Getter

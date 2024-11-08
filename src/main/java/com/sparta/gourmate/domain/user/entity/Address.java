@@ -1,6 +1,5 @@
-package com.sparta.gourmate.domain.user;
+package com.sparta.gourmate.domain.user.entity;
 
-import com.sparta.gourmate.domain.order.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
