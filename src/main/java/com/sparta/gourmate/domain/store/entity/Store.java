@@ -1,6 +1,6 @@
-package com.sparta.gourmate.domain.entity;
+package com.sparta.gourmate.domain.store.entity;
 
-
+import com.sparta.gourmate.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

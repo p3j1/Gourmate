@@ -1,4 +1,4 @@
-package com.sparta.gourmate.domain.entity;
+package com.sparta.gourmate.domain.store.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "p_categories")
 @NoArgsConstructor
-public class Category{
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

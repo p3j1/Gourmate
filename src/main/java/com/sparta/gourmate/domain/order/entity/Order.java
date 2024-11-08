@@ -1,5 +1,4 @@
-package com.sparta.gourmate.domain.order;
-
+package com.sparta.gourmate.domain.order.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "p_orders")
-public class Order  {  // BaseEntity 상속
+public class Order {  // BaseEntity 상속
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
