@@ -1,5 +1,6 @@
 package com.sparta.gourmate.domain.menu.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -11,5 +12,15 @@ public enum MenuStatusEnum {
     HIDDEN("HIDDEN");
 
     private final String MenuStatus;
+
+    @JsonCreator
+    public static MenuStatusEnum from(String value) {
+        for (MenuStatusEnum status : MenuStatusEnum.values()) {
+            if (status.name().equalsIgnoreCase(value)) {
+                return status;
+            }
+        }
+        return null;
+    }
 
 }

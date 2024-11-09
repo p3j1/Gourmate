@@ -31,7 +31,8 @@ public enum ErrorCode {
     MENU_NAME_EMPTY("메뉴 이름이 존재하지 않습니다.", BAD_REQUEST),
     MENU_PRICE_EMPTY("메뉴 가격이 존재하지 않습니다.", BAD_REQUEST),
     MENU_PRICE_INVALID("메뉴 가격이 유효하지 않습니다.", BAD_REQUEST),
-    MENU_STATUS_EMPTY("메뉴 상태가 존재하지 않습니다.",BAD_REQUEST)
+    MENU_STATUS_EMPTY("메뉴 상태가 존재하지 않습니다.",BAD_REQUEST),
+    MENU_STATUS_INVALID("메뉴 상태 값이 유효하지 않습니다.",BAD_REQUEST),
 
     ;
 
