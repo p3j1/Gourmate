@@ -49,11 +49,11 @@ public class MenuController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("stores/{storeId}")
+    @GetMapping("/stores/{storeId}")
     public ResponseEntity<Page<MenuResponseDto>> getMenuList(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                              @PathVariable UUID storeId,
                                                              @RequestParam String query,
-                                                             @RequestParam int page,
+                                                             @RequestParam(defaultValue = "1") int page,
                                                              @RequestParam(defaultValue = "10") int size,
                                                              @RequestParam(defaultValue = "createdAt") String sortBy,
                                                              @RequestParam(defaultValue = "false") boolean isAsc) {
