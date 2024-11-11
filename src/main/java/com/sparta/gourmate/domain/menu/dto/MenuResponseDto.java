@@ -4,6 +4,7 @@ import com.sparta.gourmate.domain.menu.entity.Menu;
 import com.sparta.gourmate.domain.menu.entity.MenuStatusEnum;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -14,6 +15,8 @@ public class MenuResponseDto {
     private final String description;
     private final Integer price;
     private final MenuStatusEnum status;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public MenuResponseDto(Menu menu) {
         this.storeId = menu.getStore().getId();
@@ -22,6 +25,8 @@ public class MenuResponseDto {
         this.description = menu.getDescription();
         this.price = menu.getPrice();
         this.status = menu.getStatus();
+        this.createdAt = menu.getCreatedAt();
+        this.updatedAt = menu.getUpdatedAt();
     }
 
 }

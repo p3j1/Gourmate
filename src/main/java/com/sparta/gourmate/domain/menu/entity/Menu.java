@@ -1,10 +1,13 @@
 package com.sparta.gourmate.domain.menu.entity;
 
 import com.sparta.gourmate.domain.menu.dto.MenuRequestDto;
+import com.sparta.gourmate.domain.menu.dto.MenuUpdateRequestDto;
 import com.sparta.gourmate.domain.store.entity.Store;
+import com.sparta.gourmate.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 
@@ -12,7 +15,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @Table(name = "p_menu")
-public class Menu {
+public class Menu extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -39,7 +42,37 @@ public class Menu {
         this.price = requestDto.getPrice();
         this.status = requestDto.getStatus();
         this.store = store;
+    }
 
+    public void update(MenuUpdateRequestDto updateRequestDto) {
+        updateName(updateRequestDto.getMenuName());
+        updateDescription(updateRequestDto.getDescription());
+        updatePrice(updateRequestDto.getPrice());
+        updateStatus(updateRequestDto.getStatus());
+    }
+
+    private void updateStatus(MenuStatusEnum status) {
+        if (status != null) {
+            this.status = status;
+        }
+    }
+
+    private void updatePrice(Integer price) {
+        if (price != null) {
+            this.price = price;
+        }
+    }
+
+    private void updateDescription(String description) {
+        if (StringUtils.hasText(description)) {
+            this.description = description;
+        }
+    }
+
+    private void updateName(String menuName) {
+        if (StringUtils.hasText(menuName)) {
+            this.name = menuName;
+        }
     }
 
 }
