@@ -4,6 +4,7 @@ import com.sparta.gourmate.domain.menu.dto.MenuRequestDto;
 import com.sparta.gourmate.domain.menu.dto.MenuResponseDto;
 import com.sparta.gourmate.domain.menu.dto.MenuUpdateRequestDto;
 import com.sparta.gourmate.domain.menu.entity.Menu;
+import com.sparta.gourmate.domain.menu.entity.MenuStatusEnum;
 import com.sparta.gourmate.domain.menu.repository.MenuRepository;
 import com.sparta.gourmate.domain.store.entity.Store;
 import com.sparta.gourmate.domain.store.repository.StoreRepository;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -59,11 +62,12 @@ public class MenuService {
         Store store = checkStore(storeId);
         checkUser(user, store);
         Pageable pageable = createPageableWithSorting(page, size, sortBy, isAsc);
+        List<MenuStatusEnum> statusList = Arrays.asList(MenuStatusEnum.AVAILABLE, MenuStatusEnum.OUT_OF_STOCK);
         Page<Menu> menuList;
         if (query != null && !query.isEmpty()) {
-            menuList = menuRepository.findAllByStoreIdAndNameContaining(storeId, query, pageable);
+            menuList = menuRepository.findAllByStoreIdAndStatusInAndNameContaining(storeId, statusList, query, pageable);
         } else {
-            menuList = menuRepository.findAllByStoreId(storeId, pageable);
+            menuList = menuRepository.findAllByStoreIdAndStatusIn(storeId, statusList, pageable);
         }
         return menuList.map(MenuResponseDto::new);
     }
