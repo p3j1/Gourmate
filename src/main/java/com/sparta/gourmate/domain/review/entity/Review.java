@@ -3,6 +3,7 @@ package com.sparta.gourmate.domain.review.entity;
 import com.sparta.gourmate.domain.order.entity.Order;
 import com.sparta.gourmate.domain.store.entity.Store;
 import com.sparta.gourmate.domain.user.entity.User;
+import com.sparta.gourmate.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "p_reviews")
 @NoArgsConstructor
-public class Review {
+public class Review extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

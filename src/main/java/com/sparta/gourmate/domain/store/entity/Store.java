@@ -2,6 +2,7 @@ package com.sparta.gourmate.domain.store.entity;
 
 import com.sparta.gourmate.domain.menu.entity.Menu;
 import com.sparta.gourmate.domain.user.entity.User;
+import com.sparta.gourmate.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "p_stores")
 @NoArgsConstructor
-public class Store {
+public class Store extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
