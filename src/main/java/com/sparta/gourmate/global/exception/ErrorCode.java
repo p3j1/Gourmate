@@ -22,6 +22,18 @@ public enum ErrorCode {
     AUTH_JWT_UNSUPPORTED("지원되지 않는 토큰입니다.", UNAUTHORIZED),
     AUTH_MEMBER_NOT_EXISTS("존재하지 않는 사용자입니다.", BAD_REQUEST),
     AUTH_PASSWORD_BLANK("비밀번호는 공백일 수 없습니다.", BAD_REQUEST),
+
+    USER_NOT_SAME("해당 작성자가 아닙니다.", BAD_REQUEST),
+
+    STORE_NOT_EXISTS("가게Id가 존재하지 않습니다.", BAD_REQUEST),
+    STORE_NOT_FOUND("가게가 존재하지 않습니다.", NOT_FOUND),
+
+    MENU_NAME_EMPTY("메뉴 이름이 존재하지 않습니다.", BAD_REQUEST),
+    MENU_PRICE_EMPTY("메뉴 가격이 존재하지 않습니다.", BAD_REQUEST),
+    MENU_PRICE_INVALID("메뉴 가격이 유효하지 않습니다.", BAD_REQUEST),
+    MENU_STATUS_EMPTY("메뉴 상태가 존재하지 않습니다.",BAD_REQUEST),
+    MENU_STATUS_INVALID("메뉴 상태 값이 유효하지 않습니다.",BAD_REQUEST),
+
     ;
 
     private final String message;

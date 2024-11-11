@@ -1,24 +1,26 @@
 package com.sparta.gourmate.domain.menu.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum MenuStatusEnum {
-    AVAILABLE(status.AVAILABLE),
-    OUT_OF_STOCK(status.OUT_OF_STOCK),
-    HIDDEN(status.HIDDEN);
+    AVAILABLE("AVAILABLE"),
+    OUT_OF_STOCK("OUT_OF_STOCK"),
+    HIDDEN("HIDDEN");
 
     private final String MenuStatus;
 
-    MenuStatusEnum(String menuStatus) {
-        this.MenuStatus = menuStatus;
-    }
-
-    public String getMenuStatus() {
-        return this.MenuStatus;
-    }
-
-    public static class status {
-        public static final String AVAILABLE = "AVAILABLE";
-        public static final String OUT_OF_STOCK = "OUT_OF_STOCK";
-        public static final String HIDDEN = "HIDDEN";
+    @JsonCreator
+    public static MenuStatusEnum from(String value) {
+        for (MenuStatusEnum status : MenuStatusEnum.values()) {
+            if (status.name().equalsIgnoreCase(value)) {
+                return status;
+            }
+        }
+        return null;
     }
 
 }
