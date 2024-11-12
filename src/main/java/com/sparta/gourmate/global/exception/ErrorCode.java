@@ -34,6 +34,15 @@ public enum ErrorCode {
     MENU_STATUS_EMPTY("메뉴 상태가 존재하지 않습니다.",BAD_REQUEST),
     MENU_STATUS_INVALID("메뉴 상태 값이 유효하지 않습니다.",BAD_REQUEST),
 
+    CATEGORY_NOT_FOUND("카테고리가 존재하지 않습니다.", NOT_FOUND),
+    CATEGORY_NAME_EMPTY("카테고리 이름이 존재하지 않습니다.", BAD_REQUEST),
+
+    ORDER_NOT_EXISTS("주문Id가 존재하지 않습니다.", BAD_REQUEST),
+    ORDER_NOT_FOUND("주문이 존재하지 않습니다.", NOT_FOUND),
+
+    REVIEW_RATING_EMPTY("리뷰 별점 값이 유효하지 않습니다.", BAD_REQUEST),
+    REVIEW_NOT_FOUND("리뷰가 존재하지 않습니다.", NOT_FOUND)
+
     ;
 
     private final String message;
