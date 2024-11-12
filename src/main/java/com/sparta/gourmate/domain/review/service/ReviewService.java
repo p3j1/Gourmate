@@ -72,6 +72,15 @@ public class ReviewService {
         return new ReviewResponseDto(review);
     }
 
+    // 리뷰 삭제
+    public void deleteReview(UUID reviewId, User user) {
+        Review review = checkReview(reviewId);  // 리뷰 확인
+        checkRole(user);    // 권한 확인
+        checkUser(review, user);    // 유저 확인
+
+        reviewRepository.deleteById(reviewId);
+    }
+
     // 유저 확인
     private void checkUser(Review review, User user) {
         Long userId = review.getUser().getId();

@@ -52,4 +52,12 @@ public class ReviewController {
         User user = userDetails.getUser();
         return reviewService.updateReview(reviewId, requestDto, user);
     }
+
+    // 리뷰 삭제
+    @DeleteMapping("/{reviewId}")
+    public void deleteReview(@PathVariable UUID reviewId,
+                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        reviewService.deleteReview(reviewId, user);
+    }
 }
