@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -70,6 +71,26 @@ public class StoreService {
         Page<Review> reviewList = reviewRepository.findAllByStoreId(storeId, pageable);
 
         return reviewList.map(ReviewResponseDto::new);
+    }
+
+    // 가게 수정
+    public StoreResponseDto updateStore(UUID storeId, StoreRequestDto requestDto, User user) {
+        Store store = checkStore(storeId);  // 가게 확인
+        Category category = checkCategory(requestDto.getCategoryId());  // 카테고리 확인
+        checkRole(user);    // 권한 확인
+        checkUser(store, user); // 유저 확인
+
+        store.update(requestDto, category);
+
+        return new StoreResponseDto(store);
+    }
+
+    // 유저 확인
+    private void checkUser(Store store, User user) {
+        Long userId = store.getUser().getId();
+        if (!Objects.equals(userId, user.getId())) {
+            throw new CustomException(ErrorCode.AUTH_AUTHORIZATION_FAILED);
+        }
     }
 
     // 가게 확인

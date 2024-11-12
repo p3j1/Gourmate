@@ -58,4 +58,13 @@ public class StoreController {
                                                  @RequestParam("size") int size) {
         return storeService.getReviewList(storeId, sortBy, isAsc, page - 1, size);
     }
+
+    // 가게 수정
+    @PutMapping("/{storeId}")
+    public StoreResponseDto updateStore(@PathVariable UUID storeId,
+                                        @Valid @RequestBody StoreRequestDto requestDto,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        return storeService.updateStore(storeId, requestDto, user);
+    }
 }

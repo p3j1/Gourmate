@@ -50,4 +50,10 @@ public class Store extends BaseEntity {
         this.category = category;
         this.user = user;
     }
+
+    public void update(StoreRequestDto requestDto, Category category) {
+        this.category = category;
+        this.name = requestDto.getName();
+        this.location = requestDto.getLocation();
+    }
 }
