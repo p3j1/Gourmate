@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,5 +36,11 @@ public class ReviewController {
     public List<ReviewResponseDto> getReviewList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         return reviewService.getReviewList(user);
+    }
+
+    // 리뷰 조회
+    @GetMapping("/{reviewId}")
+    public ReviewResponseDto getReview(@PathVariable UUID reviewId) {
+        return reviewService.getReview(reviewId);
     }
 }

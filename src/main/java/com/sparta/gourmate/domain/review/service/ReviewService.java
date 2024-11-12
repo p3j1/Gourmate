@@ -52,6 +52,19 @@ public class ReviewService {
         }
         return responseDtoList;
     }
+    
+    // 리뷰 조회
+    public ReviewResponseDto getReview(UUID reviewId) {
+        Review review = checkReview(reviewId);  // 리뷰 확인
+
+        return new ReviewResponseDto(review);
+    }
+
+    // 리뷰 확인
+    private Review checkReview(UUID reviewId) {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+    }
 
     // 주문 확인
     private Order checkOrder(UUID orderId) {
