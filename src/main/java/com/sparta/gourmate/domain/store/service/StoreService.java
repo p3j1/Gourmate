@@ -1,5 +1,7 @@
 package com.sparta.gourmate.domain.store.service;
 
+import com.sparta.gourmate.domain.review.dto.ReviewResponseDto;
+import com.sparta.gourmate.domain.review.entity.Review;
 import com.sparta.gourmate.domain.review.repository.ReviewRepository;
 import com.sparta.gourmate.domain.store.dto.StoreRequestDto;
 import com.sparta.gourmate.domain.store.dto.StoreResponseDto;
@@ -26,6 +28,7 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final CategoryRepository categoryRepository;
+    private final ReviewRepository reviewRepository;
 
     // 가게 생성
     public StoreResponseDto createStore(StoreRequestDto requestDto, User user) {
@@ -55,6 +58,18 @@ public class StoreService {
         Store store = checkStore(storeId);  // 가게 확인
 
         return new StoreResponseDto(store);
+    }
+
+    // 가게 리뷰 조회
+    public Page<ReviewResponseDto> getReviewList(UUID storeId, String sortBy, boolean isAsc, int page, int size) {
+        // 정렬
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Review> reviewList = reviewRepository.findAllByStoreId(storeId, pageable);
+
+        return reviewList.map(ReviewResponseDto::new);
     }
 
     // 가게 확인

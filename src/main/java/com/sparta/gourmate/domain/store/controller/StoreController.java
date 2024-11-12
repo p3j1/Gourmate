@@ -1,5 +1,6 @@
 package com.sparta.gourmate.domain.store.controller;
 
+import com.sparta.gourmate.domain.review.dto.ReviewResponseDto;
 import com.sparta.gourmate.domain.store.dto.StoreRequestDto;
 import com.sparta.gourmate.domain.store.dto.StoreResponseDto;
 import com.sparta.gourmate.domain.store.service.StoreService;
@@ -46,5 +47,15 @@ public class StoreController {
     @GetMapping("/{storeId}")
     public StoreResponseDto getStore(@PathVariable UUID storeId) {
         return storeService.getStore(storeId);
+    }
+
+    // 가게 리뷰 조회
+    @GetMapping("/{storeId}/reviews")
+    public Page<ReviewResponseDto> getReviewList(@PathVariable UUID storeId,
+                                                 @RequestParam("sortBy") String sortBy,
+                                                 @RequestParam("isAsc") boolean isAsc,
+                                                 @RequestParam("page") int page,
+                                                 @RequestParam("size") int size) {
+        return storeService.getReviewList(storeId, sortBy, isAsc, page - 1, size);
     }
 }
