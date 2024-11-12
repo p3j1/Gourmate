@@ -45,4 +45,12 @@ public class CategoryController {
         User user = userDetails.getUser();
         return categoryService.updateCategory(categoryId, requestDto, user);
     }
+
+    // 카테고리 삭제
+    @DeleteMapping("/{categoryId}")
+    public void deleteCategory(@PathVariable UUID categoryId,
+                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        categoryService.deleteCategory(categoryId, user);
+    }
 }

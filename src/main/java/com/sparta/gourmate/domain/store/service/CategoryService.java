@@ -51,6 +51,14 @@ public class CategoryService {
         return new CategoryResponseDto(category);
     }
 
+    // 카테고리 삭제
+    public void deleteCategory(UUID categoryId, User user) {
+        checkRole(user);    // 권한 확인
+        checkCategory(categoryId);  // 카테고리 확인
+
+        categoryRepository.deleteById(categoryId);
+    }
+
     // 카테고리 확인
     private Category checkCategory(UUID categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(
