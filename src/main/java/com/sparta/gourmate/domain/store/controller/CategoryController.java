@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,5 +35,14 @@ public class CategoryController {
     @GetMapping
     public List<CategoryResponseDto> getCategories() {
         return categoryService.getCategories();
+    }
+
+    // 카테고리 수정
+    @PutMapping("/{categoryId}")
+    public CategoryResponseDto updateCategory(@PathVariable UUID categoryId,
+                                              @Valid @RequestBody CategoryRequestDto requestDto,
+                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        return categoryService.updateCategory(categoryId, requestDto, user);
     }
 }

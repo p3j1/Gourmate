@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +39,22 @@ public class CategoryService {
             responseDtoList.add(new CategoryResponseDto(category));
         }
         return responseDtoList;
+    }
+
+    // 카테고리 수정
+    public CategoryResponseDto updateCategory(UUID categoryId, CategoryRequestDto requestDto, User user) {
+        checkRole(user);    // 권한 확인
+        Category category = checkCategory(categoryId);  // 카테고리 확인
+
+        category.update(requestDto);
+
+        return new CategoryResponseDto(category);
+    }
+
+    // 카테고리 확인
+    private Category checkCategory(UUID categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(
+                () -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 
     // 권한 확인
