@@ -41,4 +41,10 @@ public class StoreController {
                                                @RequestParam("size") int size) {
         return storeService.getStoreList(query, categoryId, sortBy, isAsc, page - 1, size);
     }
+
+    // 가게 조회
+    @GetMapping("/{storeId}")
+    public StoreResponseDto getStore(@PathVariable UUID storeId) {
+        return storeService.getStore(storeId);
+    }
 }

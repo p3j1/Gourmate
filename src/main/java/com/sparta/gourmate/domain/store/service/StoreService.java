@@ -50,6 +50,19 @@ public class StoreService {
         return storeList.map(StoreResponseDto::new);
     }
 
+    // 가게 조회
+    public StoreResponseDto getStore(UUID storeId) {
+        Store store = checkStore(storeId);  // 가게 확인
+
+        return new StoreResponseDto(store);
+    }
+
+    // 가게 확인
+    private Store checkStore(UUID storeId) {
+        return storeRepository.findById(storeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
+    }
+
     // 카테고리 확인
     private Category checkCategory(UUID categoryId) {
         return categoryRepository.findById(categoryId)
