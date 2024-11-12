@@ -15,6 +15,8 @@ import com.sparta.gourmate.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -34,6 +36,21 @@ public class ReviewService {
         Review review = new Review(requestDto, user, store, order);
         reviewRepository.save(review);
         return new ReviewResponseDto(review);
+    }
+
+    // 리뷰 목록 조회
+    public List<ReviewResponseDto> getReviewList(User user) {
+        checkRole(user);    // 권한 확인
+
+        Long userId = user.getId();
+        List<Review> reviewList = reviewRepository.findAllByUserId(userId);   // 내가 작성한 리뷰 조회
+
+        List<ReviewResponseDto> responseDtoList = new ArrayList<>();
+
+        for (Review review : reviewList) {
+            responseDtoList.add(new ReviewResponseDto(review));
+        }
+        return responseDtoList;
     }
 
     // 주문 확인
