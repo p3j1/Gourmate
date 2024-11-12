@@ -3,10 +3,12 @@ package com.sparta.gourmate.domain.menu.entity;
 import com.sparta.gourmate.domain.menu.dto.MenuRequestDto;
 import com.sparta.gourmate.domain.menu.dto.MenuUpdateRequestDto;
 import com.sparta.gourmate.domain.store.entity.Store;
+import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
@@ -14,6 +16,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
+@SQLDelete(sql = "UPDATE p_menu SET is_deleted = true, deleted_at = CURRENT_TIMESTAMP, deleted_by = user_id WHERE id = ?")
 @Table(name = "p_menu")
 public class Menu extends BaseEntity {
     @Id
@@ -36,12 +39,17 @@ public class Menu extends BaseEntity {
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
-    public Menu(MenuRequestDto requestDto, Store store) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public Menu(MenuRequestDto requestDto, Store store, User user) {
         this.name = requestDto.getMenuName();
         this.description = requestDto.getDescription();
         this.price = requestDto.getPrice();
         this.status = requestDto.getStatus();
         this.store = store;
+        this.user = user;
     }
 
     public void update(MenuUpdateRequestDto updateRequestDto) {

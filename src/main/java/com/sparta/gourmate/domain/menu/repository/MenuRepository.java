@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MenuRepository extends JpaRepository<Menu, UUID> {
-    Page<Menu> findAllByStoreIdAndStatusIn(UUID storeId,List<MenuStatusEnum> statusList, Pageable validatedPageable);
-    Page<Menu> findAllByStoreIdAndStatusInAndNameContaining(UUID storeId, List<MenuStatusEnum> statusList, String query, Pageable validatedPageable);
-
+    Page<Menu> findAllByStoreIdAndStatusInAndIsDeletedFalse(UUID storeId,List<MenuStatusEnum> statusList, Pageable validatedPageable);
+    Page<Menu> findAllByStoreIdAndStatusInAndNameContainingAndIsDeletedFalse(UUID storeId, List<MenuStatusEnum> statusList, String query, Pageable validatedPageable);
 }

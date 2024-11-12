@@ -50,16 +50,22 @@ public class MenuController {
     }
 
     @GetMapping("/stores/{storeId}")
-    public ResponseEntity<Page<MenuResponseDto>> getMenuList(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                             @PathVariable UUID storeId,
+    public ResponseEntity<Page<MenuResponseDto>> getMenuList(@PathVariable UUID storeId,
                                                              @RequestParam String query,
                                                              @RequestParam(defaultValue = "1") int page,
                                                              @RequestParam(defaultValue = "10") int size,
                                                              @RequestParam(defaultValue = "createdAt") String sortBy,
                                                              @RequestParam(defaultValue = "false") boolean isAsc) {
-        User user = userDetails.getUser();
-        Page<MenuResponseDto> responseDtoPage = menuService.getMenuList(user, storeId, query, page-1, size, sortBy, isAsc);
+        Page<MenuResponseDto> responseDtoPage = menuService.getMenuList(storeId, query, page-1, size, sortBy, isAsc);
         return ResponseEntity.ok(responseDtoPage);
+    }
+
+    @DeleteMapping("/{menuId}")
+    public ResponseEntity<Void> deleteMenu(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                           @PathVariable UUID menuId) {
+        User user = userDetails.getUser();
+        menuService.deleteMenu(user, menuId);
+        return ResponseEntity.ok().build();
     }
 
 }

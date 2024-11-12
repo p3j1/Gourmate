@@ -34,9 +34,9 @@ public class MenuService {
 
     public MenuResponseDto createMenu(User user, MenuRequestDto requestDto) {
         Store store = checkStore(requestDto.getStoreId());
-        checkUser(user, store);
+        checkUserByStore(user, store);
         checkRole(user);
-        Menu menu = new Menu(requestDto, store);
+        Menu menu = new Menu(requestDto, store, user);
         menuRepository.save(menu);
         return new MenuResponseDto(menu);
     }
@@ -44,7 +44,7 @@ public class MenuService {
     @Transactional
     public MenuResponseDto updateMenu(User user, UUID menuId, MenuUpdateRequestDto updateRequestDto) {
         Menu menu = checkMenu(menuId);
-        checkUser(user, menu.getStore());
+        checkUserByMenu(user, menu);
         checkRole(user);
         menu.update(updateRequestDto);
         return new MenuResponseDto(menu);
@@ -53,23 +53,30 @@ public class MenuService {
     @Transactional(readOnly = true)
     public MenuResponseDto getMenu(User user, UUID menuId) {
         Menu menu = checkMenu(menuId);
-        checkUser(user, menu.getStore());
+        checkUserByMenu(user, menu);
         return new MenuResponseDto(menu);
     }
 
     @Transactional(readOnly = true)
-    public Page<MenuResponseDto> getMenuList(User user, UUID storeId, String query, int page, int size, String sortBy, boolean isAsc) {
+    public Page<MenuResponseDto> getMenuList(UUID storeId, String query, int page, int size, String sortBy, boolean isAsc) {
         Store store = checkStore(storeId);
-        checkUser(user, store);
         Pageable pageable = createPageableWithSorting(page, size, sortBy, isAsc);
         List<MenuStatusEnum> statusList = Arrays.asList(MenuStatusEnum.AVAILABLE, MenuStatusEnum.OUT_OF_STOCK);
         Page<Menu> menuList;
         if (query != null && !query.isEmpty()) {
-            menuList = menuRepository.findAllByStoreIdAndStatusInAndNameContaining(storeId, statusList, query, pageable);
+            menuList = menuRepository.findAllByStoreIdAndStatusInAndNameContainingAndIsDeletedFalse(storeId, statusList, query, pageable);
         } else {
-            menuList = menuRepository.findAllByStoreIdAndStatusIn(storeId, statusList, pageable);
+            menuList = menuRepository.findAllByStoreIdAndStatusInAndIsDeletedFalse(storeId, statusList, pageable);
         }
         return menuList.map(MenuResponseDto::new);
+    }
+
+    @Transactional
+    public void deleteMenu(User user, UUID menuId) {
+        Menu menu = checkMenu(menuId);
+        checkUserByMenu(user, menu);
+        checkRole(user);
+        menuRepository.deleteById(menu.getId());
     }
 
     private Pageable createPageableWithSorting(int page, int size, String sortBy, boolean isAsc) {
@@ -91,8 +98,14 @@ public class MenuService {
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
     }
 
-    private void checkUser(User user, Store store) {
+    private void checkUserByStore(User user, Store store) {
         if (!Objects.equals(store.getUser().getId(), user.getId())) {
+            throw new CustomException(ErrorCode.USER_NOT_SAME);
+        }
+    }
+
+    private void checkUserByMenu(User user, Menu menu) {
+        if (!Objects.equals(menu.getUser().getId(), user.getId())) {
             throw new CustomException(ErrorCode.USER_NOT_SAME);
         }
     }
