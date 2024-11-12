@@ -12,6 +12,7 @@ import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.domain.user.entity.UserRoleEnum;
 import com.sparta.gourmate.global.exception.CustomException;
 import com.sparta.gourmate.global.exception.ErrorCode;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,7 @@ public class ReviewService {
     }
 
     // 리뷰 수정
+    @Transactional
     public ReviewResponseDto updateReview(UUID reviewId, ReviewRequestDto requestDto, User user) {
         Review review = checkReview(reviewId);  // 리뷰 확인
         checkRole(user);    // 권한 확인
@@ -73,6 +75,7 @@ public class ReviewService {
     }
 
     // 리뷰 삭제
+    @Transactional
     public void deleteReview(UUID reviewId, User user) {
         Review review = checkReview(reviewId);  // 리뷰 확인
         checkRole(user);    // 권한 확인

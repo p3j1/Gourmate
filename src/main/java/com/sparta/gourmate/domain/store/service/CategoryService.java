@@ -8,6 +8,7 @@ import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.domain.user.entity.UserRoleEnum;
 import com.sparta.gourmate.global.exception.CustomException;
 import com.sparta.gourmate.global.exception.ErrorCode;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,7 @@ public class CategoryService {
     }
 
     // 카테고리 수정
+    @Transactional
     public CategoryResponseDto updateCategory(UUID categoryId, CategoryRequestDto requestDto, User user) {
         checkRole(user);    // 권한 확인
         Category category = checkCategory(categoryId);  // 카테고리 확인
@@ -52,6 +54,7 @@ public class CategoryService {
     }
 
     // 카테고리 삭제
+    @Transactional
     public void deleteCategory(UUID categoryId, User user) {
         checkRole(user);    // 권한 확인
         checkCategory(categoryId);  // 카테고리 확인

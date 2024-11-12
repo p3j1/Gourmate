@@ -13,6 +13,7 @@ import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.domain.user.entity.UserRoleEnum;
 import com.sparta.gourmate.global.exception.CustomException;
 import com.sparta.gourmate.global.exception.ErrorCode;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -74,6 +75,7 @@ public class StoreService {
     }
 
     // 가게 수정
+    @Transactional
     public StoreResponseDto updateStore(UUID storeId, StoreRequestDto requestDto, User user) {
         Store store = checkStore(storeId);  // 가게 확인
         Category category = checkCategory(requestDto.getCategoryId());  // 카테고리 확인
@@ -86,6 +88,7 @@ public class StoreService {
     }
 
     // 가게 삭제
+    @Transactional
     public void deleteStore(UUID storeId, User user) {
         Store store = checkStore(storeId);  // 가게 확인
         checkRole(user);    // 권한 확인
