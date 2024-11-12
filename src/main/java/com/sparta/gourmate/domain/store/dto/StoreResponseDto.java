@@ -10,7 +10,7 @@ public class StoreResponseDto {
     private UUID categoryId;
     private String storeName;
     private String location;
-    private int averageRating;
+    private float averageRating;
 
 
     public StoreResponseDto(Store store) {

@@ -31,7 +31,7 @@ public class Store extends BaseEntity {
     private String location;
 
     @Column
-    private int averageRating;
+    private float averageRating;
 
     @OneToOne
     @JoinColumn(name = "category_id")
