@@ -11,6 +11,9 @@ import com.sparta.gourmate.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -24,6 +27,17 @@ public class CategoryService {
         Category category = new Category(requestDto);
         categoryRepository.save(category);
         return new CategoryResponseDto(category);
+    }
+
+    // 카테고리 목록 조회
+    public List<CategoryResponseDto> getCategories() {
+        List<Category> categoryList = categoryRepository.findAll();
+        List<CategoryResponseDto> responseDtoList = new ArrayList<>();
+
+        for (Category category : categoryList) {
+            responseDtoList.add(new CategoryResponseDto(category));
+        }
+        return responseDtoList;
     }
 
     // 권한 확인
