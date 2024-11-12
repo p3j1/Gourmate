@@ -67,4 +67,12 @@ public class StoreController {
         User user = userDetails.getUser();
         return storeService.updateStore(storeId, requestDto, user);
     }
+
+    // 가게 삭제
+    @DeleteMapping("{storeId}")
+    public void deleteStore(@PathVariable UUID storeId,
+                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        storeService.deleteStore(storeId, user);
+    }
 }

@@ -85,6 +85,15 @@ public class StoreService {
         return new StoreResponseDto(store);
     }
 
+    // 가게 삭제
+    public void deleteStore(UUID storeId, User user) {
+        Store store = checkStore(storeId);  // 가게 확인
+        checkRole(user);    // 권한 확인
+        checkUser(store, user); // 유저 확인
+
+        storeRepository.deleteById(storeId);
+    }
+
     // 유저 확인
     private void checkUser(Store store, User user) {
         Long userId = store.getUser().getId();
