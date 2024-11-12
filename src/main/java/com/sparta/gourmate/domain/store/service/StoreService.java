@@ -12,6 +12,10 @@ import com.sparta.gourmate.domain.user.entity.UserRoleEnum;
 import com.sparta.gourmate.global.exception.CustomException;
 import com.sparta.gourmate.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -31,6 +35,19 @@ public class StoreService {
         Store store = new Store(requestDto, user, category);
         storeRepository.save(store);
         return new StoreResponseDto(store);
+    }
+
+    // 가게 목록 조회
+    public Page<StoreResponseDto> getStoreList(String query, UUID categoryId, String sortBy,
+                                               boolean isAsc, int page, int size) {
+        // 정렬
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Store> storeList = storeRepository.findByCategoryIdAndNameContaining(categoryId, query, pageable);
+
+        return storeList.map(StoreResponseDto::new);
     }
 
     // 카테고리 확인

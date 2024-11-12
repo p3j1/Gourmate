@@ -7,13 +7,13 @@ import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,5 +29,16 @@ public class StoreController {
         User user = userDetails.getUser();
         StoreResponseDto responseDto = storeService.createStore(requestDto, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
+
+    // 가게 목록 조회
+    @GetMapping
+    public Page<StoreResponseDto> getStoreList(@RequestParam("query") String query,
+                                               @RequestParam("categoryId") UUID categoryId,
+                                               @RequestParam("sortBy") String sortBy,
+                                               @RequestParam("isAsc") boolean isAsc,
+                                               @RequestParam("page") int page,
+                                               @RequestParam("size") int size) {
+        return storeService.getStoreList(query, categoryId, sortBy, isAsc, page - 1, size);
     }
 }
