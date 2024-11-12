@@ -1,9 +1,11 @@
 package com.sparta.gourmate.domain.store.dto;
 
 import com.sparta.gourmate.domain.store.entity.Store;
+import lombok.Getter;
 
 import java.util.UUID;
 
+@Getter
 public class StoreResponseDto {
     private UUID storeId;
     private Long userId;
