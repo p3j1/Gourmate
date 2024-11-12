@@ -1,6 +1,7 @@
 package com.sparta.gourmate.domain.review.entity;
 
 import com.sparta.gourmate.domain.order.entity.Order;
+import com.sparta.gourmate.domain.review.dto.ReviewRequestDto;
 import com.sparta.gourmate.domain.store.entity.Store;
 import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.global.common.BaseEntity;
@@ -40,9 +41,9 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    public Review(int rating, String content, User user, Order order, Store store) {
-        this.rating = rating;
-        this.content = content;
+    public Review(ReviewRequestDto requestDto, User user, Store store, Order order) {
+        this.rating = requestDto.getRating();
+        this.content = requestDto.getContent();
         this.user = user;
         this.order = order;
         this.store = store;
