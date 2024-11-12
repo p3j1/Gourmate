@@ -1,6 +1,7 @@
 package com.sparta.gourmate.domain.store.entity;
 
 import com.sparta.gourmate.domain.menu.entity.Menu;
+import com.sparta.gourmate.domain.store.dto.StoreRequestDto;
 import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -43,10 +44,9 @@ public class Store extends BaseEntity {
     @OneToMany(mappedBy = "store")
     private List<Menu> menuList = new ArrayList<>();
 
-    public Store(String name, String location, int averageRating, Category category, User user) {
-        this.name = name;
-        this.location = location;
-        this.averageRating = averageRating;
+    public Store(StoreRequestDto requestDto, User user, Category category) {
+        this.name = requestDto.getName();
+        this.location = requestDto.getLocation();
         this.category = category;
         this.user = user;
     }
