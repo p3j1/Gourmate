@@ -34,6 +34,9 @@ public enum ErrorCode {
     MENU_STATUS_EMPTY("메뉴 상태가 존재하지 않습니다.",BAD_REQUEST),
     MENU_STATUS_INVALID("메뉴 상태 값이 유효하지 않습니다.",BAD_REQUEST),
 
+    AI_TEXT_EMPTY("내용 값이 존재하지 않습니다.", BAD_REQUEST),
+    AI_TEXT_LENGTH_INVALID("내용 값은 최소 2자, 최대 50자 입니다.", BAD_REQUEST)
+
     ;
 
     private final String message;
