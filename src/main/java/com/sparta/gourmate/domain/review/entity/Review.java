@@ -48,4 +48,12 @@ public class Review extends BaseEntity {
         this.order = order;
         this.store = store;
     }
+
+    public void update(ReviewRequestDto requestDto) {
+        this.rating = requestDto.getRating();
+        this.content = requestDto.getContent();
+        this.user = user;
+        this.order = order;
+        this.store = store;
+    }
 }

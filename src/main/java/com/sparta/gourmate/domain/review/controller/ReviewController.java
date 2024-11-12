@@ -43,4 +43,13 @@ public class ReviewController {
     public ReviewResponseDto getReview(@PathVariable UUID reviewId) {
         return reviewService.getReview(reviewId);
     }
+
+    // 리뷰 수정
+    @PutMapping("{reviewId}")
+    public ReviewResponseDto updateReview(@PathVariable UUID reviewId,
+                                          @Valid @RequestBody ReviewRequestDto requestDto,
+                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        return reviewService.updateReview(reviewId, requestDto, user);
+    }
 }

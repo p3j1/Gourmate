@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -52,12 +53,31 @@ public class ReviewService {
         }
         return responseDtoList;
     }
-    
+
     // 리뷰 조회
     public ReviewResponseDto getReview(UUID reviewId) {
         Review review = checkReview(reviewId);  // 리뷰 확인
 
         return new ReviewResponseDto(review);
+    }
+
+    // 리뷰 수정
+    public ReviewResponseDto updateReview(UUID reviewId, ReviewRequestDto requestDto, User user) {
+        Review review = checkReview(reviewId);  // 리뷰 확인
+        checkRole(user);    // 권한 확인
+        checkUser(review, user);    // 유저 확인
+
+        review.update(requestDto);
+
+        return new ReviewResponseDto(review);
+    }
+
+    // 유저 확인
+    private void checkUser(Review review, User user) {
+        Long userId = review.getUser().getId();
+        if (!Objects.equals(userId, user.getId())) {
+            throw new CustomException(ErrorCode.AUTH_AUTHORIZATION_FAILED);
+        }
     }
 
     // 리뷰 확인
