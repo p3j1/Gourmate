@@ -9,6 +9,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.UUID;
 
@@ -16,6 +18,8 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "p_reviews")
+@SQLDelete(sql = "UPDATE p_reviews SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = false")
 @NoArgsConstructor
 public class Review extends BaseEntity {
 
