@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -36,6 +39,14 @@ public class GoogleAiService {
         this.restTemplate = builder.build();
     }
 
+    @Retryable(
+            //재시도 대상 예외 명시: 서버 오류 및 연결/타임아웃 오류 시 재시도
+            value = {HttpServerErrorException.class, ResourceAccessException.class},
+            //재시도 횟수
+            maxAttempts = 3,
+            //초기 딜레이 2초, 재시도마다 딜레이 2배씩 증가 (2초 -> 4초 -> 8초)
+            backoff = @Backoff(delay = 2000, multiplier = 2)
+    )
     public GoogleAiResponseDto recommendText(User user, GoogleAiRequestDto requestDto) {
         URI uri = UriComponentsBuilder
                 .fromUriString("https://generativelanguage.googleapis.com")
@@ -46,7 +57,7 @@ public class GoogleAiService {
                 .toUri();
         log.info("uri = " + uri);
 
-        String text = requestDto.getText() + "답변을 최대한 간결하게 50자 이내로 해줘.";
+        String text = requestDto.getText() + " 답변을 최대한 간결하게 50자 이내로 해줘.";
         log.info("text = " + text);
 
         String requestBody = String.format("{ \"contents\": [{\"parts\": [{\"text\": \"%s\"}]}] }", text);
@@ -104,6 +115,19 @@ public class GoogleAiService {
         } catch (Exception e) {
             throw new CustomException(ErrorCode.AI_RESPONSE_PARSING_ERROR);
         }
+    }
+
+    //재시도 횟수 소진 시 실행 되는 메소드
+    @Recover
+    public GoogleAiResponseDto recover(HttpServerErrorException e, User user, GoogleAiRequestDto requestDto) {
+        log.error("Server error occurred after retries: {}", e.getMessage());
+        throw new CustomException(ErrorCode.AI_EXTERNAL_API_ERROR);
+    }
+
+    @Recover
+    public GoogleAiResponseDto recover(ResourceAccessException e, User user, GoogleAiRequestDto requestDto) {
+        log.error("Timeout error occurred after retries: {}", e.getMessage());
+        throw new CustomException(ErrorCode.AI_TIMEOUT_ERROR);
     }
 
 }
