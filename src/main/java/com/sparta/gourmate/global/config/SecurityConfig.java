@@ -1,10 +1,7 @@
 package com.sparta.gourmate.global.config;
 
 import com.sparta.gourmate.global.jwt.JwtUtil;
-import com.sparta.gourmate.global.security.ExceptionHandlerFilter;
-import com.sparta.gourmate.global.security.JwtAuthenticationFilter;
-import com.sparta.gourmate.global.security.JwtAuthorizationFilter;
-import com.sparta.gourmate.global.security.UserDetailsServiceImpl;
+import com.sparta.gourmate.global.security.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,8 +21,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
-    private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final JwtAuthorizationFilter authorizationFilter;
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
+    private final AuthenticationEntryPointImpl authenticationEntryPoint;
+    private final AccessDeniedHandlerImpl accessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -36,20 +36,19 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/api/users/signup").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class)
-                .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthorizationFilter.class);
-        // TODO: exception 처리
-//                .exceptionHandling(exception -> exception
-//                        .authenticationEntryPoint(authenticationEntryPoint)
-//                        .accessDeniedHandler(accessDeniedHandler)
-//                );
+                .addFilterBefore(authorizationFilter, JwtAuthenticationFilter.class)
+                .addFilterBefore(exceptionHandlerFilter, JwtAuthorizationFilter.class)
+                .exceptionHandling(exceptionHandler -> exceptionHandler
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+                );
 
         return http.build();
     }
@@ -58,9 +57,5 @@ public class SecurityConfig {
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
         filter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
         return filter;
-    }
-
-    private JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
     }
 }

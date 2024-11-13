@@ -1,10 +1,6 @@
 package com.sparta.gourmate.global.common;
 
-<<<<<<< HEAD
 import com.sparta.gourmate.domain.user.entity.User;
-=======
-import com.sparta.gourmate.global.security.UserDetailsImpl;
->>>>>>> 5660b60 (feat: user API, global security)
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedBy;
@@ -12,8 +8,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 

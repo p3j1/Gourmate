@@ -13,11 +13,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsernameAndIsDeletedFalse(String username);
 
     Optional<User> findByEmail(String email);
-
-    // TODO
-//    @Query(value = "select * from p_users where username = ?1", nativeQuery = true)
-//    Optional<User> findByUsernameWithDeleted(String username);
-//
-//    @Query(value = "select * from p_users where email = ?1", nativeQuery = true)
-//    Optional<User> findByEmailWithDeleted(String email);
 }

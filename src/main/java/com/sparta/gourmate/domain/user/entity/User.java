@@ -5,13 +5,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
 
 @Getter
 @Setter
 @NoArgsConstructor
-// TODO
-//@SQLDelete(sql = "UPDATE p_users SET is_deleted = true WHERE id = ?")
 @Entity
 @Table(name = "p_users")
 public class User extends BaseEntity {

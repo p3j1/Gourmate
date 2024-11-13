@@ -2,9 +2,8 @@ package com.sparta.gourmate.domain.user.controller;
 
 import com.sparta.gourmate.domain.user.dto.SignupRequestDto;
 import com.sparta.gourmate.domain.user.dto.UserResponseDto;
+import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.domain.user.service.UserService;
-import com.sparta.gourmate.global.exception.CustomException;
-import com.sparta.gourmate.global.exception.ErrorCode;
 import com.sparta.gourmate.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,32 +26,29 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    @GetMapping("/{id}")
-    public UserResponseDto getUser(@PathVariable Long id) {
-        return userService.getUser(id);
+    @GetMapping("/{userId}")
+    public UserResponseDto getUser(@PathVariable Long userId) {
+        return userService.getUser(userId);
     }
 
     @GetMapping
     public Page<UserResponseDto> getUsers(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestParam("page") int page,
-            @RequestParam("size") int size,
-            @RequestParam("sortBy") String sortBy,
-            @RequestParam("isAsc") boolean isAsc
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "true") boolean isAsc
     ) {
-        if (!userDetails.getUser().getRole().isAdmin()) {
-            throw new CustomException(ErrorCode.AUTH_AUTHORIZATION_FAILED);
-        }
         return userService.getUsers(page - 1, size, sortBy, isAsc);
     }
 
-    @PutMapping("/{id}")
-    public UserResponseDto updateUser(@PathVariable Long id, @Valid @RequestBody SignupRequestDto requestDto) {
-        return userService.updateUser(id, requestDto);
+    @PutMapping("/{userId}")
+    public UserResponseDto updateUser(@PathVariable Long userId, @Valid @RequestBody SignupRequestDto requestDto) {
+        return userService.updateUser(userId, requestDto);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @DeleteMapping("/{userId}")
+    public void deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long userId) {
+        User tokenUser = userDetails.getUser();
+        userService.deleteUser(tokenUser, userId);
     }
 }

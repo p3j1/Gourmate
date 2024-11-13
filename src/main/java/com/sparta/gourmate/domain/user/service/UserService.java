@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 import java.util.Optional;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -48,8 +49,9 @@ public class UserService {
         return new UserResponseDto(user);
     }
 
-    public UserResponseDto getUser(Long id) {
-        return new UserResponseDto(findUser(id));
+    @Transactional(readOnly = true)
+    public UserResponseDto getUser(Long userId) {
+        return new UserResponseDto(findUser(userId));
     }
 
     @Transactional(readOnly = true)
@@ -61,9 +63,8 @@ public class UserService {
         return userRepository.findAll(pageable).map(UserResponseDto::new);
     }
 
-    @Transactional
-    public UserResponseDto updateUser(Long id, SignupRequestDto requestDto) {
-        User user = findUser(id);
+    public UserResponseDto updateUser(Long userId, SignupRequestDto requestDto) {
+        User user = findUser(userId);
 
         String username = requestDto.getUsername();
         checkUsername(username);
@@ -74,18 +75,16 @@ public class UserService {
         String password = encodePassword(requestDto.getPassword());
 
         user.update(username, password, email);
-        userRepository.flush();
 
         return new UserResponseDto(user);
     }
 
-    @Transactional
-    public void deleteUser(Long id) {
-        findUser(id).delete();
+    public void deleteUser(User user, Long userId) {
+        findUser(userId).delete(user.getId());
     }
 
-    private User findUser(Long id) {
-        return userRepository.findByIdAndIsDeletedFalse(id)
+    private User findUser(Long userId) {
+        return userRepository.findByIdAndIsDeletedFalse(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTS));
     }
 
