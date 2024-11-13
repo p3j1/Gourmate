@@ -44,7 +44,6 @@ public class MenuService {
     public MenuResponseDto updateMenu(User user, UUID menuId, MenuUpdateRequestDto updateRequestDto) {
         Menu menu = checkMenu(menuId);
         checkUserByMenu(user, menu);
-        checkRole(user);
         menu.update(updateRequestDto);
         return new MenuResponseDto(menu);
     }
@@ -74,7 +73,6 @@ public class MenuService {
     public void deleteMenu(User user, UUID menuId) {
         Menu menu = checkMenu(menuId);
         checkUserByMenu(user, menu);
-        checkRole(user);
         menu.markAsDeleted(user);
     }
 
