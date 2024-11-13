@@ -8,7 +8,6 @@ import com.sparta.gourmate.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
@@ -16,7 +15,6 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE p_menu SET is_deleted = true, deleted_at = CURRENT_TIMESTAMP, deleted_by = user_id WHERE id = ?")
 @Table(name = "p_menu")
 public class Menu extends BaseEntity {
     @Id

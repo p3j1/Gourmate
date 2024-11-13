@@ -76,7 +76,7 @@ public class MenuService {
         Menu menu = checkMenu(menuId);
         checkUserByMenu(user, menu);
         checkRole(user);
-        menuRepository.deleteById(menu.getId());
+        menu.markAsDeleted(user);
     }
 
     private Pageable createPageableWithSorting(int page, int size, String sortBy, boolean isAsc) {
