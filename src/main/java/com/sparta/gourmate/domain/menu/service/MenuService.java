@@ -36,8 +36,7 @@ public class MenuService {
         Store store = checkStore(requestDto.getStoreId());
         checkUserByStore(user, store);
         checkRole(user);
-        Menu menu = new Menu(requestDto, store, user);
-        menuRepository.save(menu);
+        Menu menu = menuRepository.save(new Menu(requestDto, store, user));
         return new MenuResponseDto(menu);
     }
 
@@ -64,9 +63,10 @@ public class MenuService {
         List<MenuStatusEnum> statusList = Arrays.asList(MenuStatusEnum.AVAILABLE, MenuStatusEnum.OUT_OF_STOCK);
         Page<Menu> menuList;
         if (query != null && !query.isEmpty()) {
-            menuList = menuRepository.findAllByStoreIdAndStatusInAndNameContainingAndIsDeletedFalse(storeId, statusList, query, pageable);
+            String queryWithWildcard = "%" + query + "%";
+            menuList = menuRepository.findActiveMenuByStoreAndStatusAndName(storeId, statusList, queryWithWildcard, pageable);
         } else {
-            menuList = menuRepository.findAllByStoreIdAndStatusInAndIsDeletedFalse(storeId, statusList, pageable);
+            menuList = menuRepository.findActiveMenuByStoreAndStatus(storeId, statusList, pageable);
         }
         return menuList.map(MenuResponseDto::new);
     }
