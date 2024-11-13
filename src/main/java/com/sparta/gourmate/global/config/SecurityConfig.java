@@ -1,6 +1,7 @@
 package com.sparta.gourmate.global.config;
 
 import com.sparta.gourmate.global.jwt.JwtUtil;
+import com.sparta.gourmate.global.security.ExceptionHandlerFilter;
 import com.sparta.gourmate.global.security.JwtAuthenticationFilter;
 import com.sparta.gourmate.global.security.JwtAuthorizationFilter;
 import com.sparta.gourmate.global.security.UserDetailsServiceImpl;
@@ -42,7 +43,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthorizationFilter.class);
         // TODO: exception 처리
 //                .exceptionHandling(exception -> exception
 //                        .authenticationEntryPoint(authenticationEntryPoint)

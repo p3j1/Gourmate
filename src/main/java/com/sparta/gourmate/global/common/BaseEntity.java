@@ -1,6 +1,10 @@
 package com.sparta.gourmate.global.common;
 
+<<<<<<< HEAD
 import com.sparta.gourmate.domain.user.entity.User;
+=======
+import com.sparta.gourmate.global.security.UserDetailsImpl;
+>>>>>>> 5660b60 (feat: user API, global security)
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedBy;
@@ -8,13 +12,15 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity {
+public class BaseEntity {
 
     @CreatedBy
     @Column(updatable = false)
@@ -26,17 +32,14 @@ public abstract class BaseEntity {
     private LocalDateTime createdAt;
 
     @LastModifiedBy
-    @Column
     private Long updatedBy;
 
     @LastModifiedDate
-    @Column
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updatedAt;
 
     private Long deletedBy;
 
-    @Column
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime deletedAt;
 
@@ -47,5 +50,4 @@ public abstract class BaseEntity {
         this.deletedBy = user.getId();
         this.isDeleted = true;
     }
-
 }

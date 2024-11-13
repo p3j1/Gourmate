@@ -10,23 +10,23 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignupRequestDto {
-    @NotBlank
-    @Size(min = 4, max = 10)
-    @Pattern(regexp = "^[a-z0-9]+$")
+    @NotBlank(message = "이름은 필수값입니다.")
+    @Size(min = 4, max = 10, message = "USERNAME_POLICY")
+    @Pattern(regexp = "^[a-z0-9]+$", message = "USERNAME_POLICY")
     private String username;
 
-    @NotBlank
-    @Size(min = 8, max = 15)
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*)(+=._-])[a-zA-Z\\d!@#$%^&*)(+=._-]+$")
+    @NotBlank(message = "비밀번호는 필수값입니다.")
+    @Size(min = 8, max = 15, message = "PASSWORD_POLICY")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*)(+=._-])[a-zA-Z\\d!@#$%^&*)(+=._-]+$", message = "PASSWORD_POLICY")
     private String password;
 
-    @Email
-    @NotBlank
+    @NotBlank(message = "이메일은 필수값입니다.")
+    @Email(message = "이메일 형식이 아닙니다.")
     private String email;
 
-    private Boolean isOwner;
+    private Boolean isOwner = false;
 
-    private Boolean isAdmin;
+    private Boolean isAdmin = false;
 
-    private String adminToken;
+    private String adminToken = "";
 }
