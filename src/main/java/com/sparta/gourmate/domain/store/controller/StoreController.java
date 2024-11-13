@@ -35,11 +35,11 @@ public class StoreController {
     // 가게 목록 조회
     @GetMapping
     public Page<StoreResponseDto> getStoreList(@RequestParam(defaultValue = "") String query,
-                                               @RequestParam("categoryId") UUID categoryId,
-                                               @RequestParam("sortBy") String sortBy,
-                                               @RequestParam("isAsc") boolean isAsc,
-                                               @RequestParam("page") int page,
-                                               @RequestParam("size") int size) {
+                                               @RequestParam(value = "categoryId", defaultValue = "") UUID categoryId,
+                                               @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
+                                               @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc,
+                                               @RequestParam(value = "page", defaultValue = "1") int page,
+                                               @RequestParam(value = "size", defaultValue = "10") int size) {
         return storeService.getStoreList(query, categoryId, sortBy, isAsc, page - 1, size);
     }
 
@@ -52,10 +52,10 @@ public class StoreController {
     // 가게 리뷰 조회
     @GetMapping("/{storeId}/reviews")
     public Page<ReviewResponseDto> getReviewList(@PathVariable UUID storeId,
-                                                 @RequestParam("sortBy") String sortBy,
-                                                 @RequestParam("isAsc") boolean isAsc,
-                                                 @RequestParam("page") int page,
-                                                 @RequestParam("size") int size) {
+                                                 @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
+                                                 @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc,
+                                                 @RequestParam(value = "page", defaultValue = "1") int page,
+                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
         return storeService.getReviewList(storeId, sortBy, isAsc, page - 1, size);
     }
 
