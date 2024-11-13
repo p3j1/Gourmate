@@ -33,7 +33,7 @@ public class Store extends BaseEntity {
     @Column
     private float averageRating;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
