@@ -27,6 +27,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MenuService {
 
     private final MenuRepository menuRepository;
@@ -40,7 +41,6 @@ public class MenuService {
         return new MenuResponseDto(menu);
     }
 
-    @Transactional
     public MenuResponseDto updateMenu(User user, UUID menuId, MenuUpdateRequestDto updateRequestDto) {
         Menu menu = checkMenu(menuId);
         checkUserByMenu(user, menu);
@@ -71,7 +71,6 @@ public class MenuService {
         return menuList.map(MenuResponseDto::new);
     }
 
-    @Transactional
     public void deleteMenu(User user, UUID menuId) {
         Menu menu = checkMenu(menuId);
         checkUserByMenu(user, menu);
