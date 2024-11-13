@@ -35,7 +35,11 @@ public enum ErrorCode {
     MENU_STATUS_INVALID("메뉴 상태 값이 유효하지 않습니다.",BAD_REQUEST),
 
     AI_TEXT_EMPTY("내용 값이 존재하지 않습니다.", BAD_REQUEST),
-    AI_TEXT_LENGTH_INVALID("내용 값은 최소 2자, 최대 50자 입니다.", BAD_REQUEST)
+    AI_TEXT_LENGTH_INVALID("내용 값은 최소 2자, 최대 50자 입니다.", BAD_REQUEST),
+    AI_EXTERNAL_API_ERROR("외부 API 호출 중 서버 오류가 발생하였습니다.", INTERNAL_SERVER_ERROR),
+    AI_INVALID_REQUEST("잘못된 요청입니다.", BAD_REQUEST),
+    AI_TIMEOUT_ERROR("요청이 시간 초과되었습니다.", REQUEST_TIMEOUT),
+    AI_RESPONSE_PARSING_ERROR("JSON 응답 데이터 파싱 중 오류가 발생하였습니다.", INTERNAL_SERVER_ERROR),
 
     ;
 
