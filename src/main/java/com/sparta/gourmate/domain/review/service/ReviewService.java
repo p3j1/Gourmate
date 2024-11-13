@@ -100,8 +100,14 @@ public class ReviewService {
 
     // 주문 확인
     private Order checkOrder(UUID orderId) {
-        return orderRepository.findById(orderId)
+        Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+
+        if (!Objects.equals(order.getOrderStatus(), "CONFIRMED")) {
+            throw new CustomException(ErrorCode.ORDER_PENDING);
+        }
+
+        return order;
     }
 
     // 가게 확인
