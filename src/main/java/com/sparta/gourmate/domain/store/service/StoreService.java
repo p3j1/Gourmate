@@ -53,7 +53,13 @@ public class StoreService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<Store> storeList = storeRepository.findByCategoryIdAndNameContaining(categoryId, query, pageable);
+        Page<Store> storeList;
+
+        if (categoryId == null) {
+            storeList = storeRepository.findByNameContaining(query, pageable);  // 모든 가게 목록 조회
+        } else {
+            storeList = storeRepository.findByCategoryIdAndNameContaining(categoryId, query, pageable); // 카테고리에 해당하는 가게 목록 조회
+        }
 
         return storeList.map(StoreResponseDto::new);
     }

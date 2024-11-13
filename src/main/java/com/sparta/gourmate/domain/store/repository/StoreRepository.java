@@ -9,4 +9,6 @@ import java.util.UUID;
 
 public interface StoreRepository extends JpaRepository<Store, UUID> {
     Page<Store> findByCategoryIdAndNameContaining(UUID categoryId, String query, Pageable pageable);
+
+    Page<Store> findByNameContaining(String query, Pageable pageable);
 }
