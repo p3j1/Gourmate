@@ -60,4 +60,8 @@ public class Store extends BaseEntity {
         this.name = requestDto.getName();
         this.location = requestDto.getLocation();
     }
+
+    public void updateAvg(float avg) {
+        this.averageRating = avg;
+    }
 }

@@ -3,6 +3,7 @@ package com.sparta.gourmate.domain.store.service;
 import com.sparta.gourmate.domain.review.dto.ReviewResponseDto;
 import com.sparta.gourmate.domain.review.entity.Review;
 import com.sparta.gourmate.domain.review.repository.ReviewRepository;
+import com.sparta.gourmate.domain.store.dto.AvgResponseDto;
 import com.sparta.gourmate.domain.store.dto.StoreRequestDto;
 import com.sparta.gourmate.domain.store.dto.StoreResponseDto;
 import com.sparta.gourmate.domain.store.entity.Category;
@@ -19,8 +20,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -95,6 +98,18 @@ public class StoreService {
         checkUser(store, user); // 유저 확인
 
         storeRepository.deleteById(storeId);
+    }
+
+    // 리뷰 평점 업데이트
+    @Scheduled(cron = "0 0 0/1 * * *")  // 1시간마다 실행
+    public void updateAverageRating() {
+        List<AvgResponseDto> avgList = reviewRepository.calculateAvg();
+
+        for (AvgResponseDto avgResponseDto : avgList) {
+            Store store = checkStore(avgResponseDto.getStoreId());
+            store.updateAvg(avgResponseDto.getAvg());
+            storeRepository.save(store);
+        }
     }
 
     // 유저 확인
