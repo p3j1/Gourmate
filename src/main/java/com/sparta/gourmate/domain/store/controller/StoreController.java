@@ -34,7 +34,7 @@ public class StoreController {
 
     // 가게 목록 조회
     @GetMapping
-    public Page<StoreResponseDto> getStoreList(@RequestParam("query") String query,
+    public Page<StoreResponseDto> getStoreList(@RequestParam(defaultValue = "") String query,
                                                @RequestParam("categoryId") UUID categoryId,
                                                @RequestParam("sortBy") String sortBy,
                                                @RequestParam("isAsc") boolean isAsc,
