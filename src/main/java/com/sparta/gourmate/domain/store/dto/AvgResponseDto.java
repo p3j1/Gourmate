@@ -7,9 +7,9 @@ import java.util.UUID;
 @Getter
 public class AvgResponseDto {
     private final UUID storeId;
-    private final float avg;
+    private final double avg;
 
-    public AvgResponseDto(UUID storeId, float avg) {
+    public AvgResponseDto(UUID storeId, double avg) {
         this.storeId = storeId;
         this.avg = avg;
     }

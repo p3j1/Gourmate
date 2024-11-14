@@ -33,7 +33,7 @@ public class Store extends BaseEntity {
     private String location;
 
     @Column
-    private float averageRating;
+    private double averageRating;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -59,7 +59,7 @@ public class Store extends BaseEntity {
         this.location = requestDto.getLocation();
     }
 
-    public void updateAvg(float avg) {
+    public void updateAvg(double avg) {
         this.averageRating = avg;
     }
 }

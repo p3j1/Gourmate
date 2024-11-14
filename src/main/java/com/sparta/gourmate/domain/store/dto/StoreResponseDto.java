@@ -13,7 +13,7 @@ public class StoreResponseDto extends BaseDto {
     private UUID categoryId;
     private String storeName;
     private String location;
-    private float averageRating;
+    private double averageRating;
 
 
     public StoreResponseDto(Store store) {

@@ -25,8 +25,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
+
+import static java.util.Locale.*;
 
 @Service
 @RequiredArgsConstructor
@@ -112,7 +115,8 @@ public class StoreService {
 
         for (AvgResponseDto avgResponseDto : avgList) {
             Store store = checkStore(avgResponseDto.getStoreId());
-            store.updateAvg(avgResponseDto.getAvg());
+            double avg = Double.parseDouble(String.format(KOREA, "%.1f", avgResponseDto.getAvg()));
+            store.updateAvg(avg);
             storeRepository.save(store);
         }
     }
