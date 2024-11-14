@@ -1,16 +1,13 @@
 package com.sparta.gourmate.domain.store.entity;
 
-import com.sparta.gourmate.domain.menu.entity.Menu;
 import com.sparta.gourmate.domain.store.dto.CategoryRequestDto;
 import com.sparta.gourmate.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +15,6 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "p_categories")
-@SQLDelete(sql = "UPDATE p_categories SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 @NoArgsConstructor
 public class Category extends BaseEntity {

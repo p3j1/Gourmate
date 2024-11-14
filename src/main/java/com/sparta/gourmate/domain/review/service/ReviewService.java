@@ -74,8 +74,7 @@ public class ReviewService {
     public void deleteReview(UUID reviewId, User user) {
         Review review = checkReview(reviewId);  // 리뷰 확인
         checkUser(review, user);    // 유저 확인
-
-        reviewRepository.deleteById(reviewId);
+        review.delete(user.getId());
     }
 
     // 유저 확인

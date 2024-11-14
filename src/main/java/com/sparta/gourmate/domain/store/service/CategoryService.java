@@ -57,9 +57,9 @@ public class CategoryService {
     @Transactional
     public void deleteCategory(UUID categoryId, User user) {
         checkRole(user);    // 권한 확인
-        checkCategory(categoryId);  // 카테고리 확인
+        Category category = checkCategory(categoryId);  // 카테고리 확인
 
-        categoryRepository.deleteById(categoryId);
+        category.delete(user.getId());
     }
 
     // 카테고리 확인

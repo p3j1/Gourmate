@@ -89,7 +89,6 @@ public class StoreService {
     public StoreResponseDto updateStore(UUID storeId, StoreRequestDto requestDto, User user) {
         Store store = checkStore(storeId);  // 가게 확인
         Category category = checkCategory(requestDto.getCategoryId());  // 카테고리 확인
-        checkRole(user);    // 권한 확인
         checkUser(store, user); // 유저 확인
 
         store.update(requestDto, category);
@@ -101,10 +100,9 @@ public class StoreService {
     @Transactional
     public void deleteStore(UUID storeId, User user) {
         Store store = checkStore(storeId);  // 가게 확인
-        checkRole(user);    // 권한 확인
         checkUser(store, user); // 유저 확인
 
-        storeRepository.deleteById(storeId);
+        store.delete(user.getId());
     }
 
     // 리뷰 평점 업데이트
