@@ -28,6 +28,7 @@ public enum ErrorCode {
     STORE_NOT_EXISTS("가게Id가 존재하지 않습니다.", BAD_REQUEST),
     STORE_NOT_FOUND("가게가 존재하지 않습니다.", NOT_FOUND),
 
+    MENU_NOT_FOUND("메뉴가 존재하지 않습니다.", NOT_FOUND),
     MENU_NAME_EMPTY("메뉴 이름이 존재하지 않습니다.", BAD_REQUEST),
     MENU_PRICE_EMPTY("메뉴 가격이 존재하지 않습니다.", BAD_REQUEST),
     MENU_PRICE_INVALID("메뉴 가격이 유효하지 않습니다.", BAD_REQUEST),
