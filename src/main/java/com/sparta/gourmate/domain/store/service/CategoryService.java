@@ -72,7 +72,7 @@ public class CategoryService {
     private void checkRole(User user) {
         UserRoleEnum role = user.getRole();
 
-        if (role != UserRoleEnum.MANAGER) {
+        if (!role.isAdmin()) {
             throw new CustomException(ErrorCode.AUTH_AUTHORIZATION_FAILED);
         }
     }
