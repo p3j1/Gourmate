@@ -73,7 +73,7 @@ public class MenuService {
     public void deleteMenu(User user, UUID menuId) {
         Menu menu = checkMenu(menuId);
         checkUserByMenu(user, menu);
-        menu.markAsDeleted(user);
+        menu.delete(user.getId());
     }
 
     private Pageable createPageableWithSorting(int page, int size, String sortBy, boolean isAsc) {
