@@ -19,4 +19,8 @@ public enum UserRoleEnum {
         public static final String MANAGER = "ROLE_MANAGER";
         public static final String MASTER = "ROLE_MASTER";
     }
+
+    public boolean isAdmin() {
+        return this.authority.equals(Authority.MANAGER) || this.authority.equals(Authority.MASTER);
+    }
 }
