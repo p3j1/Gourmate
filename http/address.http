@@ -1,0 +1,2 @@
+### 주소 삭제
+DELETE http://localhost:8080/api/addresses/-1

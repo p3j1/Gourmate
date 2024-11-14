@@ -45,6 +45,9 @@ public enum ErrorCode {
     AI_TIMEOUT_ERROR("요청이 시간 초과되었습니다.", REQUEST_TIMEOUT),
     AI_RESPONSE_PARSING_ERROR("JSON 응답 데이터 파싱 중 오류가 발생하였습니다.", INTERNAL_SERVER_ERROR),
 
+    ORDER_NOT_FOUND("주문이 존재하지 않습니다.", NOT_FOUND),
+
+    ADDRESS_NOT_FOUND("주소가 존재하지 않습니다.", NOT_FOUND),
     ;
 
     private final String message;

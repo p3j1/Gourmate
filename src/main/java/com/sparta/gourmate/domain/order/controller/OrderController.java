@@ -1,10 +1,15 @@
 package com.sparta.gourmate.domain.order.controller;
 
 import com.sparta.gourmate.domain.order.dto.OrderRequestDto;
+import com.sparta.gourmate.domain.order.dto.OrderResponseDto;
 import com.sparta.gourmate.domain.order.entity.Order;
 import com.sparta.gourmate.domain.order.service.OrderService;
+import com.sparta.gourmate.global.exception.CustomException;
+import com.sparta.gourmate.global.exception.ErrorCode;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +27,9 @@ public class OrderController {
 
     // 주문 생성 (POST)
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody OrderRequestDto orderRequestDto) {
-        Order createdOrder = orderService.createOrder(orderRequestDto);
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto, Authentication authentication) {
+        String userId = authentication.getName(); // 인증된 사용자 ID 가져오기
+        Order createdOrder = orderService.createOrder(orderRequestDto, userId);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 
@@ -31,7 +37,8 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrderById(@PathVariable UUID orderId) {
         Order order = orderService.getOrderById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found or has been deleted"));
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+        OrderResponseDto orderResponseDto = new OrderResponseDto(order);
         return ResponseEntity.ok(order);
     }
 
@@ -44,8 +51,9 @@ public class OrderController {
 
     // 주문 수정 (PUT)
     @PutMapping("/{orderId}")
-    public ResponseEntity<Order> updateOrder(@PathVariable UUID orderId, @RequestBody Order updatedOrder) {
-        Order order = orderService.updateOrder(orderId, updatedOrder);
+    public ResponseEntity<Order> updateOrder(@PathVariable UUID orderId, @RequestBody OrderRequestDto requestDto, Authentication authentication) {
+        String userId = authentication.getName();
+        Order order = orderService.updateOrder(orderId, requestDto, userId);
         return ResponseEntity.ok(order);
     }
 
@@ -58,7 +66,8 @@ public class OrderController {
 
     // 주문 취소 (PUT)
     @PutMapping("/{orderId}/cancel")
-    public ResponseEntity<Order> cancelOrder(@PathVariable UUID orderId) {
+    public ResponseEntity<Order> cancelOrder(@PathVariable UUID orderId, Authentication authentication) {
+        String userId = authentication.getName();
         Order order = orderService.cancelOrder(orderId);
         return ResponseEntity.ok(order);
     }
