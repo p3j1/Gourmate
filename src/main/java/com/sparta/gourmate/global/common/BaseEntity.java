@@ -1,6 +1,5 @@
 package com.sparta.gourmate.global.common;
 
-import com.sparta.gourmate.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedBy;
@@ -39,9 +38,9 @@ public class BaseEntity {
 
     private Boolean isDeleted = false;
 
-    public void markAsDeleted(User user) {
+    public void delete(Long userId) {
         this.deletedAt = LocalDateTime.now();
-        this.deletedBy = user.getId();
+        this.deletedBy = userId;
         this.isDeleted = true;
     }
 }
