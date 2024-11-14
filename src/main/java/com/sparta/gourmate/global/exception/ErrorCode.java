@@ -45,6 +45,17 @@ public enum ErrorCode {
     AI_TIMEOUT_ERROR("요청이 시간 초과되었습니다.", REQUEST_TIMEOUT),
     AI_RESPONSE_PARSING_ERROR("JSON 응답 데이터 파싱 중 오류가 발생하였습니다.", INTERNAL_SERVER_ERROR),
 
+    CATEGORY_NOT_FOUND("카테고리가 존재하지 않습니다.", NOT_FOUND),
+    CATEGORY_NAME_EMPTY("카테고리 이름이 존재하지 않습니다.", BAD_REQUEST),
+
+    ORDER_NOT_EXISTS("주문Id가 존재하지 않습니다.", BAD_REQUEST),
+    ORDER_NOT_FOUND("주문이 존재하지 않습니다.", NOT_FOUND),
+    ORDER_NOT_CONFIRMED("주문이 완료되지 않았습니다.", BAD_REQUEST),
+
+    REVIEW_RATING_EMPTY("리뷰 별점 값이 유효하지 않습니다.", BAD_REQUEST),
+    REVIEW_NOT_FOUND("리뷰가 존재하지 않습니다.", NOT_FOUND),
+    REVIEW_ALREADY_WROTE("리뷰가 이미 작성되어 있습니다.", BAD_REQUEST)
+
     ;
 
     private final String message;

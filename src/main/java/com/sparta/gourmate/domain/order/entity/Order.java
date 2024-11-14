@@ -1,5 +1,6 @@
 package com.sparta.gourmate.domain.order.entity;
 
+import com.sparta.gourmate.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "p_orders")
-public class Order {  // BaseEntity 상속
+public class Order extends BaseEntity {  // BaseEntity 상속
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
