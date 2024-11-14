@@ -9,13 +9,15 @@ import com.sparta.gourmate.global.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Slf4j(topic = "JWT 인증")
+import java.io.IOException;
+
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
@@ -37,9 +39,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                             null
                     )
             );
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new CustomException(ErrorCode.AUTH_AUTHENTICATION_FAILED);
+        } catch (IOException e) {
+            throw new CustomException(ErrorCode.COMMON_SERVER_ERROR, e);
         }
     }
 
@@ -52,7 +53,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws RuntimeException {
+        ErrorCode errorCode;
+        if (failed instanceof InternalAuthenticationServiceException && failed.getCause() instanceof CustomException) {
+            errorCode = ((CustomException) failed.getCause()).getErrorCode();
+        } else if (failed instanceof BadCredentialsException) {
+            errorCode = ErrorCode.INVALID_PASSWORD;
+        } else {
+            errorCode = ErrorCode.COMMON_SERVER_ERROR;
+        }
+        throw new CustomException(errorCode, failed);
     }
 }
