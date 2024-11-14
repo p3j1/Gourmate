@@ -33,7 +33,7 @@ public class CategoryService {
 
     // 카테고리 목록 조회
     public List<CategoryResponseDto> getCategories() {
-        List<Category> categoryList = categoryRepository.findAll();
+        List<Category> categoryList = categoryRepository.findAllAndIsDeletedFalse();
         List<CategoryResponseDto> responseDtoList = new ArrayList<>();
 
         for (Category category : categoryList) {
@@ -64,7 +64,7 @@ public class CategoryService {
 
     // 카테고리 확인
     private Category checkCategory(UUID categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(
+        return categoryRepository.findByIdAndIsDeletedFalse(categoryId).orElseThrow(
                 () -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 

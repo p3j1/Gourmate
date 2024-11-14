@@ -42,7 +42,7 @@ public class ReviewService {
     // 리뷰 목록 조회
     public List<ReviewResponseDto> getReviewList(User user) {
         Long userId = user.getId();
-        List<Review> reviewList = reviewRepository.findAllByUserId(userId);   // 내가 작성한 리뷰 조회
+        List<Review> reviewList = reviewRepository.findAllByUserIdAndIsDeletedFalse(userId);   // 내가 작성한 리뷰 조회
 
         List<ReviewResponseDto> responseDtoList = new ArrayList<>();
 
@@ -80,7 +80,7 @@ public class ReviewService {
 
     // 첫 리뷰가 작성되면 가게 평점 업데이트
     private void updateRating(Store store, Review review) {
-        long count = reviewRepository.countByStoreId(store.getId());
+        long count = reviewRepository.countByStoreIdAndIsDeletedFalse(store.getId());
 
         if (count == 1) {
             store.updateAvg(review.getRating());
@@ -98,13 +98,13 @@ public class ReviewService {
 
     // 리뷰 확인
     private Review checkReview(UUID reviewId) {
-        return reviewRepository.findById(reviewId)
+        return reviewRepository.findByIdAndIsDeletedFalse(reviewId)
                 .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
     }
 
     // 주문 확인
     private Order checkOrder(UUID orderId) {
-        Order order = orderRepository.findById(orderId)
+        Order order = orderRepository.findByIdAndIsDeletedFalse(orderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
         if (!Objects.equals(order.getOrderStatus(), "CONFIRMED")) {
@@ -116,7 +116,7 @@ public class ReviewService {
 
     // 가게 확인
     private Store checkStore(UUID storeId) {
-        return storeRepository.findById(storeId)
+        return storeRepository.findByIdAndIsDeletedFalse(storeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
     }
 }

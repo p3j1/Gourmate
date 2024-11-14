@@ -8,15 +8,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ReviewRepository extends JpaRepository<Review, UUID> {
-    List<Review> findAllByUserId(Long userId);
+    Optional<Review> findByIdAndIsDeletedFalse(UUID id);
 
-    Page<Review> findAllByStoreId(UUID storeId, Pageable pageable);
+    List<Review> findAllByUserIdAndIsDeletedFalse(Long userId);
 
-    @Query("select new com.sparta.gourmate.domain.store.dto.AvgResponseDto(r.store.id, avg(r.rating)) from Review r group by r.store.id")
+    Page<Review> findAllByStoreIdAndIsDeletedFalse(UUID storeId, Pageable pageable);
+
+    @Query("select new com.sparta.gourmate.domain.store.dto.AvgResponseDto(r.store.id, avg(r.rating)) from Review r where r.isDeleted = false group by r.store.id")
     List<AvgResponseDto> calculateAvg();
 
-    long countByStoreId(UUID id);
+    long countByStoreIdAndIsDeletedFalse(UUID id);
 }
