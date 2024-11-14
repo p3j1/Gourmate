@@ -15,10 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -106,6 +103,10 @@ public class ReviewService {
     private Order checkOrder(UUID orderId) {
         Order order = orderRepository.findByIdAndIsDeletedFalse(orderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+
+        if (reviewRepository.findByOrderIdAndIsDeletedFalse(orderId).isPresent()) {
+            throw new CustomException(ErrorCode.REVIEW_ALREADY_WROTE);
+        }
 
         if (!Objects.equals(order.getOrderStatus(), "CONFIRMED")) {
             throw new CustomException(ErrorCode.ORDER_NOT_CONFIRMED);

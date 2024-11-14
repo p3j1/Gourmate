@@ -53,7 +53,8 @@ public enum ErrorCode {
     ORDER_NOT_CONFIRMED("주문이 완료되지 않았습니다.", BAD_REQUEST),
 
     REVIEW_RATING_EMPTY("리뷰 별점 값이 유효하지 않습니다.", BAD_REQUEST),
-    REVIEW_NOT_FOUND("리뷰가 존재하지 않습니다.", NOT_FOUND)
+    REVIEW_NOT_FOUND("리뷰가 존재하지 않습니다.", NOT_FOUND),
+    REVIEW_ALREADY_WROTE("리뷰가 이미 작성되어 있습니다.", BAD_REQUEST)
 
     ;
 

@@ -14,6 +14,8 @@ import java.util.UUID;
 public interface ReviewRepository extends JpaRepository<Review, UUID> {
     Optional<Review> findByIdAndIsDeletedFalse(UUID id);
 
+    Optional<Review> findByOrderIdAndIsDeletedFalse(UUID orderId);
+
     List<Review> findAllByUserIdAndIsDeletedFalse(Long userId);
 
     Page<Review> findAllByStoreIdAndIsDeletedFalse(UUID storeId, Pageable pageable);
