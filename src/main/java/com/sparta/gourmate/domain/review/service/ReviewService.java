@@ -9,7 +9,6 @@ import com.sparta.gourmate.domain.review.repository.ReviewRepository;
 import com.sparta.gourmate.domain.store.entity.Store;
 import com.sparta.gourmate.domain.store.repository.StoreRepository;
 import com.sparta.gourmate.domain.user.entity.User;
-import com.sparta.gourmate.domain.user.entity.UserRoleEnum;
 import com.sparta.gourmate.global.exception.CustomException;
 import com.sparta.gourmate.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
@@ -109,14 +108,5 @@ public class ReviewService {
     private Store checkStore(UUID storeId) {
         return storeRepository.findById(storeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
-    }
-
-    // 권한 확인
-    private void checkRole(User user) {
-        UserRoleEnum role = user.getRole();
-
-        if (role != UserRoleEnum.CUSTOMER) {
-            throw new CustomException(ErrorCode.AUTH_AUTHORIZATION_FAILED);
-        }
     }
 }
