@@ -17,4 +17,6 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
     @Query("select new com.sparta.gourmate.domain.store.dto.AvgResponseDto(r.store.id, avg(r.rating)) from Review r group by r.store.id")
     List<AvgResponseDto> calculateAvg();
+
+    long countByStoreId(UUID id);
 }

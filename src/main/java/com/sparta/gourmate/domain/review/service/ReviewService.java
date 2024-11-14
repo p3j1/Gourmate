@@ -35,6 +35,7 @@ public class ReviewService {
 
         Review review = new Review(requestDto, user, store, order);
         reviewRepository.save(review);
+        updateRating(store, review);
         return new ReviewResponseDto(review);
     }
 
@@ -77,6 +78,16 @@ public class ReviewService {
         review.delete(user.getId());
     }
 
+    // 첫 리뷰가 작성되면 가게 평점 업데이트
+    private void updateRating(Store store, Review review) {
+        long count = reviewRepository.countByStoreId(store.getId());
+
+        if (count == 1) {
+            store.updateAvg(review.getRating());
+            storeRepository.save(store);
+        }
+    }
+
     // 유저 확인
     private void checkUser(Review review, User user) {
         Long userId = review.getUser().getId();
@@ -97,7 +108,7 @@ public class ReviewService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
         if (!Objects.equals(order.getOrderStatus(), "CONFIRMED")) {
-            throw new CustomException(ErrorCode.ORDER_PENDING);
+            throw new CustomException(ErrorCode.ORDER_NOT_CONFIRMED);
         }
 
         return order;

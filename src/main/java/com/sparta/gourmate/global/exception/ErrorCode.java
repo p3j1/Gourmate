@@ -50,7 +50,7 @@ public enum ErrorCode {
 
     ORDER_NOT_EXISTS("주문Id가 존재하지 않습니다.", BAD_REQUEST),
     ORDER_NOT_FOUND("주문이 존재하지 않습니다.", NOT_FOUND),
-    ORDER_PENDING("주문 처리중 입니다.", BAD_REQUEST),
+    ORDER_NOT_CONFIRMED("주문이 완료되지 않았습니다.", BAD_REQUEST),
 
     REVIEW_RATING_EMPTY("리뷰 별점 값이 유효하지 않습니다.", BAD_REQUEST),
     REVIEW_NOT_FOUND("리뷰가 존재하지 않습니다.", NOT_FOUND)
