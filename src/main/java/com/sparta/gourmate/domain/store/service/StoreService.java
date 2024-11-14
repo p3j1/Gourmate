@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +56,7 @@ public class StoreService {
 
         Page<Store> storeList;
 
-        if (categoryId == null) {
+        if (StringUtils.hasText(String.valueOf(categoryId))) {
             storeList = storeRepository.findByNameContaining(query, pageable);  // 모든 가게 목록 조회
         } else {
             storeList = storeRepository.findByCategoryIdAndNameContaining(categoryId, query, pageable); // 카테고리에 해당하는 가게 목록 조회
