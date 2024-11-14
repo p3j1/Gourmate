@@ -1,32 +1,28 @@
 package com.sparta.gourmate.domain.order.service;
 
 import com.sparta.gourmate.domain.order.dto.OrderRequestDto;
+import com.sparta.gourmate.domain.order.dto.OrderResponseDto;
 import com.sparta.gourmate.domain.order.entity.Order;
-import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface OrderService {
-    Order createOrder(@Valid OrderRequestDto orderRequestDto, String userId);
 
-    Optional<Order> getOrderById(UUID orderId);
+    Order createOrder(OrderRequestDto orderRequestDto, Long userId);
 
-    List<Order> getAllOrders();
+    OrderResponseDto getOrderById(UUID orderId, Long userId);
 
-    Order updateOrder(UUID orderId, Order updatedOrder);
+    Page<OrderResponseDto> getAllOrders(Long userId, Pageable pageable);
 
-    void deleteOrder(UUID orderId); // 기존 삭제 메서드
+    Order updateOrder(UUID orderId, OrderRequestDto requestDto, Long userId);
 
-    Order cancelOrder(UUID orderId);
+    void deleteOrder(UUID orderId, Long userId);
 
-    Order requestPayment(UUID orderId);
+    Order cancelOrder(UUID orderId, Long userId);
 
-    Order requestRefund(UUID orderId);
+    Order requestPayment(UUID orderId, Long userId);
 
-    void softDeleteOrder(UUID orderId); // 소프트 딜리트 메서드 추가
-
-    Order updateOrder(UUID orderId, OrderRequestDto requestDto, String userId);
-
+    Order requestRefund(UUID orderId, Long userId);
 }

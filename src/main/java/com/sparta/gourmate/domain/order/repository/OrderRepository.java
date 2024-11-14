@@ -2,6 +2,8 @@ package com.sparta.gourmate.domain.order.repository;
 
 import com.sparta.gourmate.domain.order.entity.Order;
 import com.sparta.gourmate.domain.order.entity.OrderStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -26,4 +28,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     List<Order> findAllByIsDeletedFalse();
 
     Optional<Order> findByIdAndIsDeletedFalse(UUID orderId);
+
+    Page<Order> findAllByUserIdAndIsDeletedFalse(Long userId, Pageable pageable);
 }

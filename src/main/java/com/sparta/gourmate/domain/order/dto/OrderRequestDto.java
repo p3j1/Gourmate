@@ -42,4 +42,8 @@ public class OrderRequestDto {
     public Order toOrder() {
         return null;
     }
+
+    public OrderStatus getOrderStatus() {
+        return null;
+    }
 }

@@ -1,20 +1,22 @@
 package com.sparta.gourmate.domain.order.service;
 
+import com.sparta.gourmate.domain.order.dto.OrderRequestDto;
+import com.sparta.gourmate.domain.order.dto.OrderResponseDto;
 import com.sparta.gourmate.domain.order.entity.Order;
 import com.sparta.gourmate.domain.order.entity.OrderItem;
 import com.sparta.gourmate.domain.order.entity.OrderStatus;
 import com.sparta.gourmate.domain.order.repository.OrderRepository;
 import com.sparta.gourmate.domain.order.repository.OrderItemRepository;
-import com.sparta.gourmate.domain.order.dto.OrderRequestDto;
 import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.domain.user.repository.UserRepository;
 import com.sparta.gourmate.global.exception.CustomException;
 import com.sparta.gourmate.global.exception.ErrorCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,12 +33,10 @@ public class OrderServiceImpl implements OrderService {
         this.userRepository = userRepository;
     }
 
-
-    public Order createOrder(OrderRequestDto orderRequestDto, String userId) {
+    public Order createOrder(OrderRequestDto orderRequestDto, Long userId) {
         Order order = orderRequestDto.toOrder();
-        User user = (User) userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_EXISTS));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTS));
         order.setUser(user);
-
         orderRepository.save(order);
 
         List<OrderItem> orderItems = orderRequestDto.toOrderItems(order);
@@ -45,49 +45,38 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-
-    public Optional<Order> getOrderById(UUID orderId) {
-        // 삭제되지 않은 주문만 조회
-        return orderRepository.findByIdAndIsDeletedFalse(orderId);
+    public OrderResponseDto getOrderById(UUID orderId, Long userId) {
+        Order order = orderRepository.findByIdAndIsDeletedFalse(orderId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+        return new OrderResponseDto(order);
     }
 
-
-    public List<Order> getAllOrders() {
-        // 삭제되지 않은 모든 주문 조회
-        return orderRepository.findAllByIsDeletedFalse();
+    public Page<OrderResponseDto> getAllOrders(Long userId, Pageable pageable) {
+        Page<Order> orders = orderRepository.findAllByUserIdAndIsDeletedFalse(userId, pageable);
+        return orders.map(OrderResponseDto::new);
     }
 
-    @Override
-    public Order updateOrder(UUID orderId, Order updatedOrder) {
-        return null;
-    }
-
-
-    public Order updateOrder(UUID orderId, Order updatedOrder, String userId) {
+    public Order updateOrder(UUID orderId, OrderRequestDto requestDto, Long userId) {
         Order existingOrder = orderRepository.findByIdAndIsDeletedFalse(orderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
-        existingOrder.setAddress(updatedOrder.getAddress());
-        existingOrder.setOrderRequest(updatedOrder.getOrderRequest());
-        existingOrder.setOrderType(updatedOrder.getOrderType());
-        existingOrder.setOrderStatus(updatedOrder.getOrderStatus());
-        existingOrder.setTotalPrice(updatedOrder.getTotalPrice());
+        existingOrder.setAddress(requestDto.getAddress());
+        existingOrder.setOrderRequest(requestDto.getOrderRequest());
+        existingOrder.setOrderType(requestDto.getOrderType());
+        existingOrder.setOrderStatus(requestDto.getOrderStatus());
+        existingOrder.setTotalPrice(requestDto.getTotalPrice());
 
         return orderRepository.save(existingOrder);
     }
 
-
-    public void deleteOrder(UUID orderId) {
+    public void deleteOrder(UUID orderId, Long userId) {
         Order order = orderRepository.findByIdAndIsDeletedFalse(orderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
-
-        // 소프트 딜리트를 수행하여 isDeleted를 true로 설정
         order.softDelete();
         orderRepository.save(order);
     }
 
-
-    public Order cancelOrder(UUID orderId) {
+    public Order cancelOrder(UUID orderId, Long userId) {
         Order order = orderRepository.findByIdAndIsDeletedFalse(orderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
@@ -95,8 +84,7 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(order);
     }
 
-
-    public Order requestPayment(UUID orderId) {
+    public Order requestPayment(UUID orderId, Long userId) {
         Order order = orderRepository.findByIdAndIsDeletedFalse(orderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
@@ -104,27 +92,11 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(order);
     }
 
-
-    public Order requestRefund(UUID orderId) {
+    public Order requestRefund(UUID orderId, Long userId) {
         Order order = orderRepository.findByIdAndIsDeletedFalse(orderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
         order.setOrderStatus(OrderStatus.CANCELLED);
         return orderRepository.save(order);
-    }
-
-
-    public void softDeleteOrder(UUID orderId) {
-        // 소프트 딜리트 로직 구현
-        Order order = orderRepository.findByIdAndIsDeletedFalse(orderId)
-                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
-
-        order.softDelete();  // isDeleted = true
-        orderRepository.save(order);  // 변경사항 저장
-    }
-
-    @Override
-    public Order updateOrder(UUID orderId, OrderRequestDto requestDto, String userId) {
-        return null;
     }
 }

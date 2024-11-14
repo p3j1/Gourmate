@@ -1,5 +1,6 @@
 package com.sparta.gourmate.domain.user.dto;
 
+import com.sparta.gourmate.domain.user.entity.Address;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,5 +19,8 @@ public class AddressResponseDto {
         this.id = id;
         this.address = address;
         this.addressRequest = addressRequest;
+    }
+
+    public AddressResponseDto(Address address) {
     }
 }
