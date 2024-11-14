@@ -31,7 +31,6 @@ public class ReviewService {
 
     // 리뷰 생성
     public ReviewResponseDto createReview(ReviewRequestDto requestDto, User user) {
-        checkRole(user);    // 권한 확인
         Store store = checkStore(requestDto.getStoreId());  // 가게 확인
         Order order = checkOrder(requestDto.getOrderId());  // 주문 확인
 
@@ -42,8 +41,6 @@ public class ReviewService {
 
     // 리뷰 목록 조회
     public List<ReviewResponseDto> getReviewList(User user) {
-        checkRole(user);    // 권한 확인
-
         Long userId = user.getId();
         List<Review> reviewList = reviewRepository.findAllByUserId(userId);   // 내가 작성한 리뷰 조회
 
@@ -66,7 +63,6 @@ public class ReviewService {
     @Transactional
     public ReviewResponseDto updateReview(UUID reviewId, ReviewRequestDto requestDto, User user) {
         Review review = checkReview(reviewId);  // 리뷰 확인
-        checkRole(user);    // 권한 확인
         checkUser(review, user);    // 유저 확인
 
         review.update(requestDto);
@@ -78,7 +74,6 @@ public class ReviewService {
     @Transactional
     public void deleteReview(UUID reviewId, User user) {
         Review review = checkReview(reviewId);  // 리뷰 확인
-        checkRole(user);    // 권한 확인
         checkUser(review, user);    // 유저 확인
 
         reviewRepository.deleteById(reviewId);

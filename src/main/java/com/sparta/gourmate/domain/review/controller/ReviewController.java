@@ -45,7 +45,7 @@ public class ReviewController {
     }
 
     // 리뷰 수정
-    @PutMapping("{reviewId}")
+    @PutMapping("/{reviewId}")
     public ReviewResponseDto updateReview(@PathVariable UUID reviewId,
                                           @Valid @RequestBody ReviewRequestDto requestDto,
                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
