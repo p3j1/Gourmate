@@ -1,6 +1,7 @@
 package com.sparta.gourmate.domain.ai.entity;
 
 import com.sparta.gourmate.domain.user.entity.User;
+import com.sparta.gourmate.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @Table(name = "p_google_ai")
-public class GoogleAi {
+public class GoogleAi extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

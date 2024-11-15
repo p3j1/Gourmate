@@ -17,7 +17,6 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
@@ -67,36 +66,11 @@ public class GoogleAiService {
                 .header("Content-Type", "application/json")
                 .body(requestBody);
 
-        try {
-            ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
-            log.info("API Status Code: " + responseEntity.getStatusCode());
-
-            if (responseEntity.getStatusCode().is2xxSuccessful()) {
-                String responseText = parsingTextFromResponse(responseEntity.getBody());
-                GoogleAi googleAi = googleAiRepository.save(new GoogleAi(responseText, user));
-                return new GoogleAiResponseDto(googleAi);
-            } else {
-                log.error("API Status Code: " + responseEntity.getStatusCode());
-                throw new CustomException(ErrorCode.AI_EXTERNAL_API_ERROR);
-            }
-
-        } catch (HttpClientErrorException e) {
-            // 클라이언트 오류 (4xx) 처리
-            log.error("Client error {}: {}", e.getStatusCode(), e.getResponseBodyAsString());
-            throw new CustomException(ErrorCode.AI_INVALID_REQUEST);
-        } catch (HttpServerErrorException e) {
-            // 서버 오류 (5xx) 처리
-            log.error("Server error {}: {}", e.getStatusCode(), e.getResponseBodyAsString());
-            throw new CustomException(ErrorCode.AI_EXTERNAL_API_ERROR);
-        } catch (ResourceAccessException e) {
-            // 타임아웃 오류 처리
-            log.error("Timeout error: {}", e.getMessage());
-            throw new CustomException(ErrorCode.AI_TIMEOUT_ERROR);
-        } catch (Exception e) {
-            // 그 외 모든 예외 처리
-            log.error("Unexpected error: {}", e.getMessage(), e);
-            throw new CustomException(ErrorCode.COMMON_SERVER_ERROR);
-        }
+       ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
+       log.info("API Status Code: " + responseEntity.getStatusCode());
+       String responseText = parsingTextFromResponse(responseEntity.getBody());
+       GoogleAi googleAi = googleAiRepository.save(new GoogleAi(responseText, user));
+       return new GoogleAiResponseDto(googleAi);
 
     }
 
