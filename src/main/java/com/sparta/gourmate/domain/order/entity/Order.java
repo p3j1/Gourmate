@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -46,21 +45,4 @@ public class Order extends BaseEntity {  // BaseEntity 상속
 
     @Column(nullable = false)
     private int totalPrice;
-
-    @Column(nullable = false)
-    private boolean isDeleted = false;
-
-    private LocalDateTime deletedAt;
-
-    public void softDelete() {
-        this.isDeleted = true;
-        this.deletedAt = LocalDateTime.now();
-    }
-
-    public void setOrderDate(LocalDateTime now) {
-    }
-
-    public Iterable<? extends OrderItem> getOrderItems() {
-        return null;
-    }
 }
