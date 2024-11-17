@@ -14,13 +14,9 @@ public class AddressResponseDto {
     private String address;
     private String addressRequest;
 
-    // 생성자
-    public AddressResponseDto(UUID id, String address, String addressRequest) {
-        this.id = id;
-        this.address = address;
-        this.addressRequest = addressRequest;
-    }
-
     public AddressResponseDto(Address address) {
+        this.id = address.getId();
+        this.address = address.getAddress();
+        this.addressRequest = address.getAddressRequest();
     }
 }

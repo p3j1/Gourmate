@@ -5,13 +5,12 @@ import com.sparta.gourmate.domain.user.dto.UserResponseDto;
 import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.domain.user.entity.UserRoleEnum;
 import com.sparta.gourmate.domain.user.repository.UserRepository;
+import com.sparta.gourmate.global.common.Util;
 import com.sparta.gourmate.global.exception.CustomException;
 import com.sparta.gourmate.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,9 +55,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Page<UserResponseDto> getUsers(int page, int size, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = Util.createPageableWithSorting(page, size, sortBy, isAsc);
 
         return userRepository.findAll(pageable).map(UserResponseDto::new);
     }
@@ -85,7 +82,7 @@ public class UserService {
 
     private User findUser(Long userId) {
         return userRepository.findByIdAndIsDeletedFalse(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXISTS));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     private void checkUsername(String username) {

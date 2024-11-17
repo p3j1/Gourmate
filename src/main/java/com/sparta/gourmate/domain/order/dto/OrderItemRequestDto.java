@@ -1,24 +1,24 @@
 package com.sparta.gourmate.domain.order.dto;
 
-import com.sparta.gourmate.domain.order.entity.Order;
-import com.sparta.gourmate.domain.order.entity.OrderItem;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
 
 @Getter
 @Setter
 public class OrderItemRequestDto {
-    private Long menuId;
-    private int quantity;
-    private int unitPrice;
 
-    public OrderItem toOrderItem(Order order) {
-        OrderItem item = new OrderItem();
-        item.setOrder(order);
-        item.setQuantity(this.quantity);
-        item.setUnitPrice(this.unitPrice);
-        item.setTotalPrice(this.unitPrice * this.quantity);
-        return item;
-    }
+    @NotNull(message = "MENU_NOT_EXISTS")
+    private UUID menuId;
+
+    @NotNull(message = "ORDER_ITEM_QUANTITY_EMPTY")
+    @Positive(message = "ORDER_ITEM_QUANTITY_INVALID")
+    private Integer quantity;
+
+    @NotNull(message = "ORDER_ITEM_PRICE_EMPTY")
+    @Positive(message = "ORDER_ITEM_PRICE_INVALID")
+    private Integer unitPrice;
 }

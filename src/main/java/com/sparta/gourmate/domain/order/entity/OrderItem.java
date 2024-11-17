@@ -1,6 +1,7 @@
 package com.sparta.gourmate.domain.order.entity;
 
 import com.sparta.gourmate.domain.menu.entity.Menu;
+import com.sparta.gourmate.domain.order.dto.OrderItemRequestDto;
 import com.sparta.gourmate.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class OrderItem extends BaseEntity {  // BaseEntity 상속 (타임스탬�
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false)
     private Menu menu;
 
@@ -37,8 +38,11 @@ public class OrderItem extends BaseEntity {  // BaseEntity 상속 (타임스탬�
     @Column(nullable = false)
     private int totalPrice;
 
-    @PrePersist
-    public void prePersist() {
+    public OrderItem(OrderItemRequestDto requestDto, Order order, Menu menu) {
+        this.quantity = requestDto.getQuantity();
+        this.unitPrice = requestDto.getUnitPrice();
         this.totalPrice = this.unitPrice * this.quantity;
+        this.order = order;
+        this.menu = menu;
     }
 }

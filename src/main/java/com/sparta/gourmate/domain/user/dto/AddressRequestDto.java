@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class AddressRequestDto {
 
-    @NotBlank(message = "주소는 필수 입력 항목입니다.")
+    @NotBlank(message = "ADDRESS_EMPTY")
     private String address; // 주소
 
     private String addressRequest; // 추가 요청 사항 (선택 사항)

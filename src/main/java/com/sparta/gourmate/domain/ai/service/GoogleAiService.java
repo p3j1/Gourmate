@@ -66,11 +66,11 @@ public class GoogleAiService {
                 .header("Content-Type", "application/json")
                 .body(requestBody);
 
-       ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
-       log.info("API Status Code: " + responseEntity.getStatusCode());
-       String responseText = parsingTextFromResponse(responseEntity.getBody());
-       GoogleAi googleAi = googleAiRepository.save(new GoogleAi(responseText, user));
-       return new GoogleAiResponseDto(googleAi);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
+        log.info("API Status Code: " + responseEntity.getStatusCode());
+        String responseText = parsingTextFromResponse(responseEntity.getBody());
+        GoogleAi googleAi = googleAiRepository.save(new GoogleAi(responseText, user));
+        return new GoogleAiResponseDto(googleAi);
 
     }
 

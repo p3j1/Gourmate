@@ -7,12 +7,12 @@ import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,7 +25,7 @@ public class ReviewController {
     // 리뷰 생성
     @PostMapping
     public ResponseEntity<ReviewResponseDto> createReview(@Valid @RequestBody ReviewRequestDto requestDto,
-                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         ReviewResponseDto responseDto = reviewService.createReview(requestDto, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
@@ -33,9 +33,14 @@ public class ReviewController {
 
     // 리뷰 목록 조회
     @GetMapping
-    public List<ReviewResponseDto> getReviewList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public Page<ReviewResponseDto> getReviewList(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "false") boolean isAsc) {
         User user = userDetails.getUser();
-        return reviewService.getReviewList(user);
+        return reviewService.getReviewList(user, page - 1, size, sortBy, isAsc);
     }
 
     // 리뷰 조회

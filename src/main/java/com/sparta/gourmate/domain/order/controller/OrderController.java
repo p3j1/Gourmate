@@ -2,15 +2,12 @@ package com.sparta.gourmate.domain.order.controller;
 
 import com.sparta.gourmate.domain.order.dto.OrderRequestDto;
 import com.sparta.gourmate.domain.order.dto.OrderResponseDto;
-import com.sparta.gourmate.domain.order.entity.Order;
 import com.sparta.gourmate.domain.order.service.OrderService;
+import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,11 +24,11 @@ public class OrderController {
 
     // 주문 생성 (POST)
     @PostMapping
-    public ResponseEntity<Order> createOrder(
+    public ResponseEntity<OrderResponseDto> createOrder(
             @Valid @RequestBody OrderRequestDto orderRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Long userId = userDetails.getUser().getId();
-        Order createdOrder = orderService.createOrder(orderRequestDto, userId);
+        User user = userDetails.getUser();
+        OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, user);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 
@@ -40,8 +37,8 @@ public class OrderController {
     public ResponseEntity<OrderResponseDto> getOrderById(
             @PathVariable UUID orderId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Long userId = userDetails.getUser().getId();
-        OrderResponseDto orderResponseDto = orderService.getOrderById(orderId, userId);
+        User user = userDetails.getUser();
+        OrderResponseDto orderResponseDto = orderService.getOrderById(orderId, user);
         return ResponseEntity.ok(orderResponseDto);
     }
 
@@ -49,25 +46,23 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<Page<OrderResponseDto>> getAllOrders(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(defaultValue = "false") boolean inAsc) {
-        Long userId = userDetails.getUser().getId();
-        Sort sort = inAsc ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-        Page<OrderResponseDto> orders = orderService.getAllOrders(userId, pageable);
+            @RequestParam(defaultValue = "false") boolean isAsc) {
+        User user = userDetails.getUser();
+        Page<OrderResponseDto> orders = orderService.getAllOrders(user, page - 1, size, sortBy, isAsc);
         return ResponseEntity.ok(orders);
     }
 
     // 주문 수정 (PUT)
     @PutMapping("/{orderId}")
-    public ResponseEntity<Order> updateOrder(
+    public ResponseEntity<OrderResponseDto> updateOrder(
             @PathVariable UUID orderId,
-            @RequestBody OrderRequestDto requestDto,
+            @Valid @RequestBody OrderRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Long userId = userDetails.getUser().getId();
-        Order order = orderService.updateOrder(orderId, requestDto, userId);
+        User user = userDetails.getUser();
+        OrderResponseDto order = orderService.updateOrder(orderId, requestDto, user);
         return ResponseEntity.ok(order);
     }
 
@@ -76,39 +71,18 @@ public class OrderController {
     public ResponseEntity<Void> deleteOrder(
             @PathVariable UUID orderId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Long userId = userDetails.getUser().getId();
-        orderService.deleteOrder(orderId, userId);
+        User user = userDetails.getUser();
+        orderService.deleteOrder(orderId, user);
         return ResponseEntity.noContent().build();
     }
 
     // 주문 취소 (PUT)
     @PutMapping("/{orderId}/cancel")
-    public ResponseEntity<Order> cancelOrder(
+    public ResponseEntity<OrderResponseDto> cancelOrder(
             @PathVariable UUID orderId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Long userId = userDetails.getUser().getId();
-        Order order = orderService.cancelOrder(orderId, userId);
-        return ResponseEntity.ok(order);
-    }
-
-    // 결제 요청 (POST)
-    @PostMapping("/{orderId}/payment")
-    public ResponseEntity<Order> requestPayment(
-            @PathVariable UUID orderId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Long userId = userDetails.getUser().getId();
-        Order order = orderService.requestPayment(orderId, userId);
-        return ResponseEntity.ok(order);
-    }
-
-    // 환불 요청 (POST)
-    @PostMapping("/{orderId}/refund")
-    public ResponseEntity<Order> requestRefund(
-            @PathVariable UUID orderId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Long userId = userDetails.getUser().getId();
-        Order order = orderService.requestRefund(orderId, userId);
+        User user = userDetails.getUser();
+        OrderResponseDto order = orderService.cancelOrder(orderId, user);
         return ResponseEntity.ok(order);
     }
 }
-
