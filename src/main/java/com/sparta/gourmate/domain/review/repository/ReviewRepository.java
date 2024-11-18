@@ -1,7 +1,7 @@
 package com.sparta.gourmate.domain.review.repository;
 
-import com.sparta.gourmate.domain.store.dto.AvgResponseDto;
 import com.sparta.gourmate.domain.review.entity.Review;
+import com.sparta.gourmate.domain.store.dto.AvgResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +16,7 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
     Optional<Review> findByOrderIdAndIsDeletedFalse(UUID orderId);
 
-    List<Review> findAllByUserIdAndIsDeletedFalse(Long userId);
+    Page<Review> findAllByUserIdAndIsDeletedFalse(Long userId, Pageable pageable);
 
     Page<Review> findAllByStoreIdAndIsDeletedFalse(UUID storeId, Pageable pageable);
 

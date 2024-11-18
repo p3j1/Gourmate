@@ -8,19 +8,18 @@ import java.util.UUID;
 
 @Getter
 public class StoreResponseDto extends BaseDto {
-    private UUID storeId;
-    private Long userId;
-    private UUID categoryId;
-    private String storeName;
-    private String location;
-    private double averageRating;
-
+    private final UUID storeId;
+    private final Long userId;
+    private final CategoryResponseDto category;
+    private final String storeName;
+    private final String location;
+    private final double averageRating;
 
     public StoreResponseDto(Store store) {
         super(store);
         this.storeId = store.getId();
         this.userId = store.getUser().getId();
-        this.categoryId = store.getCategory().getId();
+        this.category = new CategoryResponseDto(store.getCategory());
         this.storeName = store.getName();
         this.location = store.getLocation();
         this.averageRating = store.getAverageRating();

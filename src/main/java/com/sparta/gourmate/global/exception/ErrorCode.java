@@ -20,22 +20,28 @@ public enum ErrorCode {
     AUTH_JWT_UNSUPPORTED("지원되지 않는 토큰입니다.", UNAUTHORIZED),
     AUTH_JWT_UNPRIVILEGED("권한이 없는 토큰입니다.", FORBIDDEN),
     INVALID_PASSWORD("비밀번호가 잘못됐습니다.", FORBIDDEN),
-    USER_NOT_EXISTS("존재하지 않는 사용자입니다.", BAD_REQUEST),
+
+    USER_NOT_FOUND("존재하지 않는 사용자입니다.", BAD_REQUEST),
     USERNAME_POLICY("이름은 영어소문자, 숫자로 이루어진 4자이상 10자 이하의 문자열이어야 합니다.", BAD_REQUEST),
     PASSWORD_POLICY("비밀번호는 영어대소문자, 숫자, 특수문자로 이루어진 8자 이상 15자 이하의 문자열이어야 합니다.", BAD_REQUEST),
+    EMAIL_POLICY("이메일 형식이 아닙니다.", BAD_REQUEST),
     USER_DUPLICATED("중복된 이름입니다.", CONFLICT),
     EMAIL_DUPLICATED("중복된 이메일입니다.", CONFLICT),
 
-    USER_NOT_SAME("해당 작성자가 아닙니다.", BAD_REQUEST),
+    USER_NOT_SAME("해당 사용자가 아닙니다.", BAD_REQUEST),
 
     STORE_NOT_EXISTS("가게Id가 존재하지 않습니다.", BAD_REQUEST),
+    STORE_NAME_EMPTY("가게 이름이 존재하지 않습니다.", BAD_REQUEST),
+    STORE_LOCATION_EMPTY("가게 위치가 존재하지 않습니다.", BAD_REQUEST),
     STORE_NOT_FOUND("가게가 존재하지 않습니다.", NOT_FOUND),
+    CATEGORY_NOT_FOUND("카테고리가 존재하지 않습니다.", NOT_FOUND),
+    CATEGORY_NOT_EXISTS("카테고리Id가 존재하지 않습니다.", BAD_REQUEST),
+    CATEGORY_NAME_EMPTY("카테고리 이름이 존재하지 않습니다.", BAD_REQUEST),
 
     MENU_NOT_FOUND("메뉴가 존재하지 않습니다.", NOT_FOUND),
     MENU_NAME_EMPTY("메뉴 이름이 존재하지 않습니다.", BAD_REQUEST),
     MENU_PRICE_EMPTY("메뉴 가격이 존재하지 않습니다.", BAD_REQUEST),
     MENU_PRICE_INVALID("메뉴 가격이 유효하지 않습니다.", BAD_REQUEST),
-    MENU_STATUS_EMPTY("메뉴 상태가 존재하지 않습니다.", BAD_REQUEST),
     MENU_STATUS_INVALID("메뉴 상태 값이 유효하지 않습니다.", BAD_REQUEST),
 
     AI_TEXT_EMPTY("내용 값이 존재하지 않습니다.", BAD_REQUEST),
@@ -45,18 +51,30 @@ public enum ErrorCode {
     AI_TIMEOUT_ERROR("요청이 시간 초과되었습니다.", REQUEST_TIMEOUT),
     AI_RESPONSE_PARSING_ERROR("JSON 응답 데이터 파싱 중 오류가 발생하였습니다.", INTERNAL_SERVER_ERROR),
 
-    CATEGORY_NOT_FOUND("카테고리가 존재하지 않습니다.", NOT_FOUND),
-    CATEGORY_NAME_EMPTY("카테고리 이름이 존재하지 않습니다.", BAD_REQUEST),
+    ADDRESS_EMPTY("주소 내용이 존재하지 않습니다.", BAD_REQUEST),
+    ADDRESS_NOT_FOUND("주소가 존재하지 않습니다.", NOT_FOUND),
 
     ORDER_NOT_EXISTS("주문Id가 존재하지 않습니다.", BAD_REQUEST),
     ORDER_NOT_FOUND("주문이 존재하지 않습니다.", NOT_FOUND),
     ORDER_NOT_CONFIRMED("주문이 완료되지 않았습니다.", BAD_REQUEST),
+    ORDER_ADDRESS_EMPTY("주문 주소가 존재하지 않습니다.", BAD_REQUEST),
+    ORDER_PRICE_EMPTY("주문 가격이 존재하지 않습니다.", BAD_REQUEST),
+    ORDER_PRICE_INVALID("주문 가격이 유효하지 않습니다.", BAD_REQUEST),
+    ORDER_ITEMS_EMPTY("주문 아이템이 존재하지 않습니다.", BAD_REQUEST),
+    ORDER_ITEM_QUANTITY_EMPTY("주문 아이템 수량이 존재하지 않습니다.", BAD_REQUEST),
+    ORDER_ITEM_QUANTITY_INVALID("주문 아이템 수량이 유효하지 않습니다.", BAD_REQUEST),
+    ORDER_ITEM_PRICE_EMPTY("주문 아이템 가격이 존재하지 않습니다.", BAD_REQUEST),
+    ORDER_ITEM_PRICE_INVALID("주문 아이템 가격이 유효하지 않습니다.", BAD_REQUEST),
+    ORDER_TYPE_INVALID("주문 타입 값이 유효하지 않습니다.", BAD_REQUEST),
+    ORDER_STATUS_INVALID("주문 상태 값이 유효하지 않습니다.", BAD_REQUEST),
+    ORDER_CANCEL_TIME_EXCEEDED("주문 취소 시간이 지났습니다.", BAD_REQUEST),
+
+    PAYMENT_NOT_FOUND("결제 내역이 존재하지 않습니다.", NOT_FOUND),
 
     REVIEW_RATING_EMPTY("리뷰 별점 값이 유효하지 않습니다.", BAD_REQUEST),
+    REVIEW_RATING_POLICY("평점은 0이상 5이하의 정수입니다.", BAD_REQUEST),
     REVIEW_NOT_FOUND("리뷰가 존재하지 않습니다.", NOT_FOUND),
-    REVIEW_ALREADY_WROTE("리뷰가 이미 작성되어 있습니다.", BAD_REQUEST)
-
-    ;
+    REVIEW_ALREADY_WROTE("리뷰가 이미 작성되어 있습니다.", BAD_REQUEST);
 
     private final String message;
     private final HttpStatus httpStatus;

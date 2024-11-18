@@ -12,14 +12,13 @@ import com.sparta.gourmate.domain.store.repository.CategoryRepository;
 import com.sparta.gourmate.domain.store.repository.StoreRepository;
 import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.domain.user.entity.UserRoleEnum;
+import com.sparta.gourmate.global.common.Util;
 import com.sparta.gourmate.global.exception.CustomException;
 import com.sparta.gourmate.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,8 +27,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
-
-import static java.util.Locale.*;
 
 @Service
 @RequiredArgsConstructor
@@ -53,9 +50,7 @@ public class StoreService {
     public Page<StoreResponseDto> getStoreList(String query, UUID categoryId, String sortBy,
                                                boolean isAsc, int page, int size) {
         // 정렬
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = Util.createPageableWithSorting(page, size, sortBy, isAsc);
 
         Page<Store> storeList;
 
@@ -78,9 +73,7 @@ public class StoreService {
     // 가게 리뷰 조회
     public Page<ReviewResponseDto> getReviewList(UUID storeId, String sortBy, boolean isAsc, int page, int size) {
         // 정렬
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = Util.createPageableWithSorting(page, size, sortBy, isAsc);
 
         Page<Review> reviewList = reviewRepository.findAllByStoreIdAndIsDeletedFalse(storeId, pageable);
 
@@ -115,7 +108,7 @@ public class StoreService {
 
         for (AvgResponseDto avgResponseDto : avgList) {
             Store store = checkStore(avgResponseDto.getStoreId());
-            double avg = Double.parseDouble(String.format(KOREA, "%.1f", avgResponseDto.getAvg()));
+            double avg = Double.parseDouble(String.format(Locale.KOREA, "%.1f", avgResponseDto.getAvg()));
             store.updateAvg(avg);
             storeRepository.save(store);
         }

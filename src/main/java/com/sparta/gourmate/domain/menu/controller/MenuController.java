@@ -56,7 +56,7 @@ public class MenuController {
                                                              @RequestParam(defaultValue = "10") int size,
                                                              @RequestParam(defaultValue = "createdAt") String sortBy,
                                                              @RequestParam(defaultValue = "false") boolean isAsc) {
-        Page<MenuResponseDto> responseDtoPage = menuService.getMenuList(storeId, query, page-1, size, sortBy, isAsc);
+        Page<MenuResponseDto> responseDtoPage = menuService.getMenuList(storeId, query, page - 1, size, sortBy, isAsc);
         return ResponseEntity.ok(responseDtoPage);
     }
 

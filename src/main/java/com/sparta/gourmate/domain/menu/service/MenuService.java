@@ -10,13 +10,12 @@ import com.sparta.gourmate.domain.store.entity.Store;
 import com.sparta.gourmate.domain.store.repository.StoreRepository;
 import com.sparta.gourmate.domain.user.entity.User;
 import com.sparta.gourmate.domain.user.entity.UserRoleEnum;
+import com.sparta.gourmate.global.common.Util;
 import com.sparta.gourmate.global.exception.CustomException;
 import com.sparta.gourmate.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +57,7 @@ public class MenuService {
     @Transactional(readOnly = true)
     public Page<MenuResponseDto> getMenuList(UUID storeId, String query, int page, int size, String sortBy, boolean isAsc) {
         Store store = checkStore(storeId);
-        Pageable pageable = createPageableWithSorting(page, size, sortBy, isAsc);
+        Pageable pageable = Util.createPageableWithSorting(page, size, sortBy, isAsc);
         List<MenuStatusEnum> statusList = Arrays.asList(MenuStatusEnum.AVAILABLE, MenuStatusEnum.OUT_OF_STOCK);
         Page<Menu> menuList;
         if (query != null && !query.isEmpty()) {
@@ -74,15 +73,6 @@ public class MenuService {
         Menu menu = checkMenu(menuId);
         checkUserByMenu(user, menu);
         menu.delete(user.getId());
-    }
-
-    private Pageable createPageableWithSorting(int page, int size, String sortBy, boolean isAsc) {
-        if (size != 10 && size != 30 && size != 50) {
-            size = 10;
-        }
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        return PageRequest.of(page, size, sort);
     }
 
     private Menu checkMenu(UUID menuId) {

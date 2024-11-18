@@ -1,6 +1,7 @@
 package com.sparta.gourmate.domain.review.service;
 
 import com.sparta.gourmate.domain.order.entity.Order;
+import com.sparta.gourmate.domain.order.entity.OrderStatus;
 import com.sparta.gourmate.domain.order.repository.OrderRepository;
 import com.sparta.gourmate.domain.review.dto.ReviewRequestDto;
 import com.sparta.gourmate.domain.review.dto.ReviewResponseDto;
@@ -9,13 +10,17 @@ import com.sparta.gourmate.domain.review.repository.ReviewRepository;
 import com.sparta.gourmate.domain.store.entity.Store;
 import com.sparta.gourmate.domain.store.repository.StoreRepository;
 import com.sparta.gourmate.domain.user.entity.User;
+import com.sparta.gourmate.global.common.Util;
 import com.sparta.gourmate.global.exception.CustomException;
 import com.sparta.gourmate.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +31,7 @@ public class ReviewService {
     private final OrderRepository orderRepository;
 
     // 리뷰 생성
+    @Transactional
     public ReviewResponseDto createReview(ReviewRequestDto requestDto, User user) {
         Store store = checkStore(requestDto.getStoreId());  // 가게 확인
         Order order = checkOrder(requestDto.getOrderId());  // 주문 확인
@@ -37,16 +43,14 @@ public class ReviewService {
     }
 
     // 리뷰 목록 조회
-    public List<ReviewResponseDto> getReviewList(User user) {
+    public Page<ReviewResponseDto> getReviewList(User user, int page, int size, String sortBy, boolean isAsc) {
         Long userId = user.getId();
-        List<Review> reviewList = reviewRepository.findAllByUserIdAndIsDeletedFalse(userId);   // 내가 작성한 리뷰 조회
 
-        List<ReviewResponseDto> responseDtoList = new ArrayList<>();
+        Pageable pageable = Util.createPageableWithSorting(page, size, sortBy, isAsc);
 
-        for (Review review : reviewList) {
-            responseDtoList.add(new ReviewResponseDto(review));
-        }
-        return responseDtoList;
+        Page<Review> reviewList = reviewRepository.findAllByUserIdAndIsDeletedFalse(userId, pageable);   // 내가 작성한 리뷰 조회
+
+        return reviewList.map(ReviewResponseDto::new);
     }
 
     // 리뷰 조회
@@ -81,7 +85,6 @@ public class ReviewService {
 
         if (count == 1) {
             store.updateAvg(review.getRating());
-            storeRepository.save(store);
         }
     }
 
@@ -89,7 +92,7 @@ public class ReviewService {
     private void checkUser(Review review, User user) {
         Long userId = review.getUser().getId();
         if (!Objects.equals(userId, user.getId())) {
-            throw new CustomException(ErrorCode.AUTH_AUTHORIZATION_FAILED);
+            throw new CustomException(ErrorCode.USER_NOT_SAME);
         }
     }
 
@@ -108,7 +111,7 @@ public class ReviewService {
             throw new CustomException(ErrorCode.REVIEW_ALREADY_WROTE);
         }
 
-        if (!Objects.equals(order.getOrderStatus(), "CONFIRMED")) {
+        if (!Objects.equals(order.getOrderStatus(), OrderStatus.CONFIRMED)) {
             throw new CustomException(ErrorCode.ORDER_NOT_CONFIRMED);
         }
 
