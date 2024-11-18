@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -101,8 +100,8 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.CANCELLED);
 
         Payment payment = requestRefund(order);
-
         order.setPayment(payment);
+
         return new OrderResponseDto(order);
     }
 
