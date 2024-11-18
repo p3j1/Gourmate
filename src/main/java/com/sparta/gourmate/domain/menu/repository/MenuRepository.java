@@ -27,4 +27,5 @@ public interface MenuRepository extends JpaRepository<Menu, UUID> {
             "and m.isDeleted = false")
     Page<Menu> findActiveMenuByStoreAndStatusAndName(UUID storeId, List<MenuStatusEnum> statusList, String query, Pageable pageable);
 
+    List<Menu> findAllByIdInAndIsDeletedFalse(List<UUID> menuIdList);
 }

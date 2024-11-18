@@ -34,7 +34,6 @@ public class MenuService {
 
     public MenuResponseDto createMenu(User user, MenuRequestDto requestDto) {
         Store store = checkStore(requestDto.getStoreId());
-        checkUserByStore(user, store);
         checkRole(user);
         Menu menu = menuRepository.save(new Menu(requestDto, store, user));
         return new MenuResponseDto(menu);
@@ -85,14 +84,8 @@ public class MenuService {
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
     }
 
-    private void checkUserByStore(User user, Store store) {
-        if (!Objects.equals(store.getUser().getId(), user.getId())) {
-            throw new CustomException(ErrorCode.USER_NOT_SAME);
-        }
-    }
-
     private void checkUserByMenu(User user, Menu menu) {
-        if (!Objects.equals(menu.getUser().getId(), user.getId())) {
+        if (!user.getRole().isAdmin() && !Objects.equals(menu.getUser().getId(), user.getId())) {
             throw new CustomException(ErrorCode.USER_NOT_SAME);
         }
     }

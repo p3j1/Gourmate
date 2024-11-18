@@ -33,10 +33,10 @@ public class UserService {
 
     public UserResponseDto createUser(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
-        checkUsername(username);
+        checkUsername(username, null);
 
         String email = requestDto.getEmail();
-        checkEmail(email);
+        checkEmail(email, null);
 
         String password = encodePassword(requestDto.getPassword());
 
@@ -54,20 +54,20 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserResponseDto> getUsers(int page, int size, String sortBy, boolean isAsc) {
+    public Page<UserResponseDto> getUsers(String query, int page, int size, String sortBy, boolean isAsc) {
         Pageable pageable = Util.createPageableWithSorting(page, size, sortBy, isAsc);
 
-        return userRepository.findAll(pageable).map(UserResponseDto::new);
+        return userRepository.findAllByUsernameContaining(query, pageable).map(UserResponseDto::new);
     }
 
     public UserResponseDto updateUser(Long userId, SignupRequestDto requestDto) {
         User user = findUser(userId);
 
         String username = requestDto.getUsername();
-        checkUsername(username);
+        checkUsername(username, userId);
 
         String email = requestDto.getEmail();
-        checkEmail(email);
+        checkEmail(email, userId);
 
         String password = encodePassword(requestDto.getPassword());
 
@@ -85,16 +85,16 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
-    private void checkUsername(String username) {
+    private void checkUsername(String username, Long userId) {
         Optional<User> checkUsername = userRepository.findByUsername(username);
-        if (checkUsername.isPresent()) {
+        if (checkUsername.isPresent() && !checkUsername.get().getId().equals(userId)) {
             throw new CustomException(ErrorCode.USER_DUPLICATED);
         }
     }
 
-    private void checkEmail(String email) {
+    private void checkEmail(String email, Long userId) {
         Optional<User> checkEmail = userRepository.findByEmail(email);
-        if (checkEmail.isPresent()) {
+        if (checkEmail.isPresent() && !checkEmail.get().getId().equals(userId)) {
             throw new CustomException(ErrorCode.EMAIL_DUPLICATED);
         }
     }
