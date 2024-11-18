@@ -51,23 +51,8 @@ public class OrderService {
 
         // order items
         List<OrderItemRequestDto> orderItemDtoList = orderRequestDto.getOrderItems();
-        List<UUID> menuIdList = new ArrayList<>();
-        for (OrderItemRequestDto orderItemRequestDto : orderItemDtoList) {
-            menuIdList.add(orderItemRequestDto.getMenuId());
-        }
-        List<Menu> menuList = menuRepository.findAllById(menuIdList);
-
-        List<OrderItem> orderItems = orderItemDtoList
-                .stream()
-                .map(dto -> {
-                    for (Menu menu : menuList) {
-                        if (menu.getId().equals(dto.getMenuId())) {
-                            return new OrderItem(dto, order, menu);
-                        }
-                    }
-                    throw new CustomException(ErrorCode.MENU_NOT_FOUND);
-                })
-                .toList();
+        List<Menu> menuList = findMenuList(orderItemDtoList);
+        List<OrderItem> orderItems = findOrderItemList(order, menuList, orderItemDtoList);
         orderItemRepository.saveAll(orderItems);
         order.setOrderItemList(orderItems);
 
@@ -129,6 +114,25 @@ public class OrderService {
     private Store findStore(UUID storeId) {
         return storeRepository.findByIdAndIsDeletedFalse(storeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
+    }
+
+    private List<Menu> findMenuList(List<OrderItemRequestDto> orderItemDtoList) {
+        List<UUID> menuIdList = orderItemDtoList.stream().map(OrderItemRequestDto::getMenuId).toList();
+        return menuRepository.findAllById(menuIdList);
+    }
+
+    private List<OrderItem> findOrderItemList(Order order, List<Menu> menuList, List<OrderItemRequestDto> orderItemDtoList) {
+        return orderItemDtoList
+                .stream()
+                .map(dto -> {
+                    for (Menu menu : menuList) {
+                        if (menu.getId().equals(dto.getMenuId())) {
+                            return new OrderItem(dto, order, menu);
+                        }
+                    }
+                    throw new CustomException(ErrorCode.MENU_NOT_FOUND);
+                })
+                .toList();
     }
 
     private void checkOrderUser(User user, Order order) {

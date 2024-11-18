@@ -68,5 +68,6 @@ public class Order extends BaseEntity {  // BaseEntity 상속
         this.orderRequest = requestDto.getOrderRequest();
         this.orderType = requestDto.getOrderType();
         this.totalPrice = requestDto.getTotalPrice();
+        this.orderStatus = requestDto.getOrderStatus();
     }
 }

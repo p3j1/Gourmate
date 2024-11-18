@@ -33,7 +33,7 @@ public class OrderRequestDto {
     private Integer totalPrice;
 
     @NotNull(message = "ORDER_STATUS_INVALID")
-    private OrderStatus status = OrderStatus.PENDING;
+    private OrderStatus orderStatus = OrderStatus.PENDING;
 
     @Valid
     @NotEmpty(message = "ORDER_ITEMS_EMPTY")
