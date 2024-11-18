@@ -76,12 +76,12 @@ public class MenuService {
     }
 
     private Menu checkMenu(UUID menuId) {
-        return menuRepository.findById(menuId)
+        return menuRepository.findByIdAndIsDeletedFalse(menuId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND));
     }
 
     private Store checkStore(UUID storeId) {
-        return storeRepository.findById(storeId)
+        return storeRepository.findByIdAndIsDeletedFalse(storeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
     }
 
