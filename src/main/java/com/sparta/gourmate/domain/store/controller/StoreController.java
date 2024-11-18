@@ -1,5 +1,6 @@
 package com.sparta.gourmate.domain.store.controller;
 
+import com.sparta.gourmate.domain.order.dto.OrderResponseDto;
 import com.sparta.gourmate.domain.review.dto.ReviewResponseDto;
 import com.sparta.gourmate.domain.store.dto.StoreRequestDto;
 import com.sparta.gourmate.domain.store.dto.StoreResponseDto;
@@ -55,8 +56,22 @@ public class StoreController {
                                                  @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
                                                  @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc,
                                                  @RequestParam(value = "page", defaultValue = "1") int page,
-                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
-        return storeService.getReviewList(storeId, sortBy, isAsc, page - 1, size);
+                                                 @RequestParam(value = "size", defaultValue = "10") int size,
+                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        return storeService.getReviewList(storeId, sortBy, isAsc, page - 1, size, user);
+    }
+
+    // 가게 주문 조회
+    @GetMapping("/{storeId}/orders")
+    public Page<OrderResponseDto> getOrderList(@PathVariable UUID storeId,
+                                               @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
+                                               @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc,
+                                               @RequestParam(value = "page", defaultValue = "1") int page,
+                                               @RequestParam(value = "size", defaultValue = "10") int size,
+                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        return storeService.getOrderList(storeId, sortBy, isAsc, page - 1, size, user);
     }
 
     // 가게 수정
