@@ -135,10 +135,7 @@ public class OrderService {
     }
 
     private void checkOrderUser(User user, Order order) {
-        if (!user.getRole().isAdmin() &&
-                (!Objects.equals(order.getUser().getId(), user.getId()) ||
-                        !Objects.equals(order.getStore().getUser().getId(), user.getId()))
-        ) {
+        if (!user.getRole().isAdmin() && !Objects.equals(order.getUser().getId(), user.getId())) {
             throw new CustomException(ErrorCode.USER_NOT_SAME);
         }
     }
