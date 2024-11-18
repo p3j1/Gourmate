@@ -1,5 +1,8 @@
 package com.sparta.gourmate.domain.store.service;
 
+import com.sparta.gourmate.domain.order.dto.OrderResponseDto;
+import com.sparta.gourmate.domain.order.entity.Order;
+import com.sparta.gourmate.domain.order.repository.OrderRepository;
 import com.sparta.gourmate.domain.review.dto.ReviewResponseDto;
 import com.sparta.gourmate.domain.review.entity.Review;
 import com.sparta.gourmate.domain.review.repository.ReviewRepository;
@@ -35,6 +38,7 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final CategoryRepository categoryRepository;
     private final ReviewRepository reviewRepository;
+    private final OrderRepository orderRepository;
 
     // 가게 생성
     public StoreResponseDto createStore(StoreRequestDto requestDto, User user) {
@@ -54,7 +58,7 @@ public class StoreService {
 
         Page<Store> storeList;
 
-        if (StringUtils.hasText(String.valueOf(categoryId))) {
+        if (!StringUtils.hasText(String.valueOf(categoryId))) {
             storeList = storeRepository.findByNameContainingAndIsDeletedFalse(query, pageable);  // 모든 가게 목록 조회
         } else {
             storeList = storeRepository.findByCategoryIdAndNameContainingAndIsDeletedFalse(categoryId, query, pageable); // 카테고리에 해당하는 가게 목록 조회
@@ -71,13 +75,27 @@ public class StoreService {
     }
 
     // 가게 리뷰 조회
-    public Page<ReviewResponseDto> getReviewList(UUID storeId, String sortBy, boolean isAsc, int page, int size) {
+    public Page<ReviewResponseDto> getReviewList(UUID storeId, String sortBy, boolean isAsc, int page, int size, User user) {
+        Store store = checkStore(storeId);  // 가게 확인
+        checkUser(store, user); // 유저 확인
         // 정렬
         Pageable pageable = Util.createPageableWithSorting(page, size, sortBy, isAsc);
 
         Page<Review> reviewList = reviewRepository.findAllByStoreIdAndIsDeletedFalse(storeId, pageable);
 
         return reviewList.map(ReviewResponseDto::new);
+    }
+
+    // 가게 주문 조회
+    public Page<OrderResponseDto> getOrderList(UUID storeId, String sortBy, boolean isAsc, int page, int size, User user) {
+        Store store = checkStore(storeId);  // 가게 확인
+        checkUser(store, user); // 유저 확인
+        // 정렬
+        Pageable pageable = Util.createPageableWithSorting(page, size, sortBy, isAsc);
+
+        Page<Order> orderList = orderRepository.findAllByStoreIdAndIsDeletedFalse(storeId, pageable);
+
+        return orderList.map(OrderResponseDto::new);
     }
 
     // 가게 수정
@@ -117,7 +135,7 @@ public class StoreService {
     // 유저 확인
     private void checkUser(Store store, User user) {
         Long userId = store.getUser().getId();
-        if (!Objects.equals(userId, user.getId())) {
+        if (!user.getRole().isAdmin() && !Objects.equals(userId, user.getId())) {
             throw new CustomException(ErrorCode.AUTH_AUTHORIZATION_FAILED);
         }
     }

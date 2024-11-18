@@ -14,4 +14,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     Optional<Order> findByIdAndIsDeletedFalse(UUID orderId);
 
     Page<Order> findAllByUserIdAndIsDeletedFalse(Long userId, Pageable pageable);
+
+    Page<Order> findAllByStoreIdAndIsDeletedFalse(UUID storeId, Pageable pageable);
 }

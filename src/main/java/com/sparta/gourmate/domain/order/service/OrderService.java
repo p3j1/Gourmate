@@ -117,7 +117,7 @@ public class OrderService {
 
     private List<Menu> findMenuList(List<OrderItemRequestDto> orderItemDtoList) {
         List<UUID> menuIdList = orderItemDtoList.stream().map(OrderItemRequestDto::getMenuId).toList();
-        return menuRepository.findAllById(menuIdList);
+        return menuRepository.findAllByIdInAndIsDeletedFalse(menuIdList);
     }
 
     private List<OrderItem> findOrderItemList(Order order, List<Menu> menuList, List<OrderItemRequestDto> orderItemDtoList) {
@@ -135,7 +135,7 @@ public class OrderService {
     }
 
     private void checkOrderUser(User user, Order order) {
-        if (!Objects.equals(order.getUser().getId(), user.getId())) {
+        if (!user.getRole().isAdmin() && !Objects.equals(order.getUser().getId(), user.getId())) {
             throw new CustomException(ErrorCode.USER_NOT_SAME);
         }
     }

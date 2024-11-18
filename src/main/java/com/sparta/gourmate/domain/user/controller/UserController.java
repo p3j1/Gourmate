@@ -33,12 +33,13 @@ public class UserController {
 
     @GetMapping
     public Page<UserResponseDto> getUsers(
+            @RequestParam(defaultValue = "") String query,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "false") boolean isAsc
     ) {
-        return userService.getUsers(page - 1, size, sortBy, isAsc);
+        return userService.getUsers(query, page - 1, size, sortBy, isAsc);
     }
 
     @PutMapping("/{userId}")

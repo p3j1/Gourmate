@@ -64,8 +64,8 @@ public class CategoryService {
 
     // 카테고리 확인
     private Category checkCategory(UUID categoryId) {
-        return categoryRepository.findByIdAndIsDeletedFalse(categoryId).orElseThrow(
-                () -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
+        return categoryRepository.findByIdAndIsDeletedFalse(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 
     // 권한 확인
